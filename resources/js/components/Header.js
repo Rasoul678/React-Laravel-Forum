@@ -1,7 +1,12 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
+import Axios from 'axios';
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
-function Header() {
+function Header(props) {
+
+    const [signedIn, setsignin]= useState(window.App.signedIn);
+
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
@@ -35,7 +40,7 @@ function Header() {
                                 aria-haspopup="true"
                                 aria-expanded="false"
                             >
-                                <span className='h4'>Threads</span>
+                                <span className='h5'>Threads</span>
                             </a>
 
                             <div
@@ -49,9 +54,36 @@ function Header() {
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/threads/create">
-                                <span className="h4">New Thread</span>
+                                <span className="h5">Add Thread</span>
                             </Link>
                         </li>
+                    </ul>
+                    <ul className='navbar-nav ml-auto'>
+                        {signedIn ? (
+                            <li className="nav-item">
+                                <Link className="nav-link" to='' onClick={()=>{
+                                    Axios.post('/logout').then(response=>{
+                                        console.log(response);
+                                        props.history.push('/');
+                                    });
+                                }}>
+                                    <span className="h5">Logout</span>
+                                </Link>
+                            </li>
+                        ) : (
+                            <Fragment>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/login">
+                                        <span className="h5">Login</span>
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/register">
+                                        <span className="h5">Register</span>
+                                    </Link>
+                                </li>
+                            </Fragment>
+                        )}
                     </ul>
                 </div>
             </div>
@@ -59,4 +91,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default  withRouter(Header);

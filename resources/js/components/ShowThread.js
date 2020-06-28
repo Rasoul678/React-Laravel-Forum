@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 
-const useFetch = (url) => {
+const useFetch = url => {
     const [thread, setThread] = useState(null);
 
     useEffect(() => {
@@ -26,6 +26,8 @@ function ShowThread() {
 
     const thread = useFetch(url);
 
+    const [reply, setReply] = useState(null);
+
     return (
         <div>
             {thread ? (
@@ -35,7 +37,7 @@ function ShowThread() {
                             <div className="card-body">
                                 <h5 className="card-title">
                                     <a href="" className="card-link h4">
-                                        {thread.user.name}
+                                        {thread.owner.name}
                                     </a>{" "}
                                     posted:
                                     {moment(thread.created_at).fromNow()}
@@ -45,6 +47,35 @@ function ShowThread() {
                                         {thread.body}
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="card mt-4 shadow">
+                            <div className="card-body">
+                                <div className="form-group">
+                                    <label htmlFor="body">Reply</label>
+                                    <textarea
+                                        className="form-control"
+                                        id="body"
+                                        rows="3"
+                                        onChange={(e)=>{
+                                            setReply(e.target.value);
+                                        }}
+                                    ></textarea>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={(e)=>{
+                                        Axios.post(`/api/threads/${thread.id}/replies`,{body: reply, auth_user_id:window.App.user.id})
+                                        .then(response=>{
+                                            console.log(response);
+                                        }).catch(error=>{
+                                            console.log(error.response.data.message);
+                                        });
+                                    }}
+                                >
+                                    Post
+                                </button>
                             </div>
                         </div>
                     </div>

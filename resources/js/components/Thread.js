@@ -5,7 +5,7 @@ class Thread extends Component {
     render(){
         const { thread, deleteThread } = this.props;
         return (
-            <div className="card shadow my-3">
+            <div className="card shadow">
                 <div className="card-body">
                     <div className="d-flex justify-content-between">
                         <h3 className="card-title">
