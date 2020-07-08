@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
+import {useDispatch} from "react-redux";
 
 function LoginPage(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const dispatch = useDispatch();
 
     return (
         <div className='row justify-content-center mt-5'>
@@ -38,13 +41,19 @@ function LoginPage(props) {
                             </div>
                         </form>
                         <button className='btn btn-primary' onClick={(e)=>{
-                            Axios.post('/api/login', {email, password})
+                            Axios.post('/api/auth/login', {email, password})
                                 .then(response=>{
                                     console.log(response);
+                                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                                    localStorage.setItem("access_token", response.data.access_token);
+                                    window.axios.defaults.headers.common["Authorization"] =
+                                        "Bearer " + response.data.access_token;
                                     props.history.push('/');
+                                    dispatch({type: 'LOG_IN'});
                                 })
                                 .catch(error=>{
-                                    console.log(error.response.data)
+                                    console.log(error.response.data);
+                                    localStorage.removeItem('access_token');
                                 });
                         }}>Login</button>
                     </div>

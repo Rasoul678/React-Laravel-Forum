@@ -6,6 +6,7 @@ import CreateThread from "./CreateThread";
 import ShowThread from "./ShowThread";
 import  Home from './Home';
 import LoginPage from './LoginPage';
+import RegisterPage from "./RegisterPage";
 
 class App extends Component {
     render() {
@@ -16,17 +17,11 @@ class App extends Component {
                     <Switch>
                         <Route exact path='/' component={Home} />
                         <Route exact path="/threads" component={Threads} />
-                        <Route
-                            exact
-                            path="/threads/create"
-                            component={CreateThread}
-                        />
-                        <Route
-                            exact
-                            path="/threads/:id"
-                            component={ShowThread}
-                        />
+                        <Route exact path="/threads/create" component={CreateThread} />
+                        <Route exact path="/threads/:id" component={ShowThread} />
                         <Route exact path='/login' component={LoginPage} />
+                        <Route exact path='/register' component={RegisterPage} />
+
                     </Switch>
                 </div>
             </Router>

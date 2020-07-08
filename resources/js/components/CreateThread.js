@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from 'axios';
-import { useDispatch } from "react-redux";
-import {ADD_THREAD} from '../Constants';
+import {useDispatch, useSelector} from "react-redux";
+import {ADD_THREAD} from '../constants';
 
 function CreateThread(props) {
-    if(! window.App.signedIn){
+    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
+
+    if(! isAuthenticated){
         props.history.push('/login');
     }
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [errors, setErrors] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const formData = { title, body, user_id: user?.id };
 
     const dispatch = useDispatch();
 
@@ -26,54 +32,37 @@ function CreateThread(props) {
                                 <label htmlFor="title" className='h5'>Title</label>
                                 <input
                                     type="test"
-                                    className={`form-control ${
-                                        errors.title ? "is-invalid" : ""
-                                    }`}
+                                    className={`form-control ${errors.title ? "is-invalid" : ""}`}
                                     id="title"
                                     name="title"
                                     placeholder="Thread title"
                                     onChange={e => {
-                                        setTitle(e.target.value);
-                                    }}
-                                />
-                                {errors ? (
-                                    <div className="invalid-feedback">
-                                        {errors.title}
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
+                                        setTitle(e.target.value)
+                                    }}/>
+                                    {errors ? (<div className="invalid-feedback">{errors.title}</div>) : ""}
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="body" className='h5'>Body</label>
                                 <textarea
-                                    className={`form-control ${
-                                        errors.body ? "is-invalid" : ""
-                                    }`}
+                                    className={`form-control ${errors.body ? "is-invalid" : ""}`}
                                     id="body"
                                     rows="3"
                                     placeholder="Thread Body"
                                     onChange={e => {
-                                        setBody(e.target.value);
+                                        setBody(e.target.value)
                                     }}
                                 ></textarea>
-                                {errors ? (
-                                    <div className="invalid-feedback">
-                                        {errors.body}
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
+                                {errors ? (<div className="invalid-feedback">{errors.body}</div>) : ""}
                             </div>
                         </form>
                         <button
                             type="button"
                             className="btn btn-primary mb-2"
                             onClick={() => {
-                                Axios.post("/api/threads", { title, body, auth_user_id: window.App.user.id })
+                                Axios.post("/api/threads", formData)
                                     .then(response => {
-                                        console.log(response);
+                                        console.log(response.data);
                                         dispatch({
                                             type: ADD_THREAD,
                                             thread: response.data

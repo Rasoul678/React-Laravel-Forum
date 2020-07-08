@@ -1,12 +1,8 @@
-import React, { Fragment, useState } from "react";
-import Axios from 'axios';
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { withRouter } from "react-router";
+import Authentication from './Authentication';
 
-function Header(props) {
-
-    const [signedIn, setsignin]= useState(window.App.signedIn);
-
+function Header() {
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
@@ -59,31 +55,7 @@ function Header(props) {
                         </li>
                     </ul>
                     <ul className='navbar-nav ml-auto'>
-                        {signedIn ? (
-                            <li className="nav-item">
-                                <Link className="nav-link" to='' onClick={()=>{
-                                    Axios.post('/logout').then(response=>{
-                                        console.log(response);
-                                        props.history.push('/');
-                                    });
-                                }}>
-                                    <span className="h5">Logout</span>
-                                </Link>
-                            </li>
-                        ) : (
-                            <Fragment>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/login">
-                                        <span className="h5">Login</span>
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/register">
-                                        <span className="h5">Register</span>
-                                    </Link>
-                                </li>
-                            </Fragment>
-                        )}
+                        <Authentication/>
                     </ul>
                 </div>
             </div>
@@ -91,4 +63,4 @@ function Header(props) {
     );
 }
 
-export default  withRouter(Header);
+export default  Header;

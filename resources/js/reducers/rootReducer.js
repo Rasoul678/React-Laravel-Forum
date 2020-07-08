@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import threadsReducer from './ThreadsReduser'
+import threadsReducer from './ThreadsReducer';
+import authReducer from "./AuthReducer";
 
 const rootReducer = combineReducers({
-    threadsReducer
+    threadsReducer,
+    authReducer
 });
 
 export default rootReducer;

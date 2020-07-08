@@ -7,7 +7,7 @@ class Threads extends Component {
         threads: []
     };
 
-    componentDidMount() {
+    componentWillMount() {
         Axios.get("/api/threads").then(response => {
             this.setState({
                 ...this.state,

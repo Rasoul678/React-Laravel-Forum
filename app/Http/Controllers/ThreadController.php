@@ -17,7 +17,7 @@ class ThreadController extends Controller
             'body'=>'required'
         ]);
 
-        $attributes['user_id'] = request('auth_user_id');
+        $attributes['user_id'] = request('user_id');
 
         $thread = Thread::create($attributes);
 
