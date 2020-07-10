@@ -5,6 +5,7 @@ import {useDispatch} from "react-redux";
 function LoginPage(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
 
     const dispatch = useDispatch();
 
@@ -19,25 +20,34 @@ function LoginPage(props) {
                                 <label htmlFor="email">Email address</label>
                                 <input
                                     type="email"
-                                    className="form-control"
+                                    className={`form-control ${errors?.email ? 'is-invalid' : ''}`}
                                     id="email"
                                     name='email'
                                     onChange={(e)=>{
                                         setEmail(e.target.value);
                                     }}
                                 />
+                                <div className="invalid-feedback">
+                                    {errors.email && errors.email[0]}
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
                                 <input
                                     type="password"
-                                    className="form-control"
+                                    className={`form-control ${errors?.password ? 'is-invalid' : ''}`}
                                     id="password"
                                     name='password'
                                     onChange={(e)=>{
                                         setPassword(e.target.value);
                                     }}
                                 />
+                                <div className="invalid-feedback">
+                                    {errors.password && errors.password[0]}
+                                </div>
+                            </div>
+                            <div className='text-danger mb-2'>
+                                {errors.message && errors.message}
                             </div>
                         </form>
                         <button className='btn btn-primary' onClick={(e)=>{
@@ -48,11 +58,15 @@ function LoginPage(props) {
                                     localStorage.setItem("access_token", response.data.access_token);
                                     window.axios.defaults.headers.common["Authorization"] =
                                         "Bearer " + response.data.access_token;
-                                    props.history.push('/');
+                                    props.history.goBack();
                                     dispatch({type: 'LOG_IN'});
                                 })
                                 .catch(error=>{
-                                    console.log(error.response.data);
+                                    if(error.response.data.errors){
+                                        setErrors(error.response.data.errors);
+                                    }else{
+                                        setErrors(error.response.data);
+                                    }
                                     localStorage.removeItem('access_token');
                                 });
                         }}>Login</button>

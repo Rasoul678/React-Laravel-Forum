@@ -1,14 +1,19 @@
 import React, {useRef} from 'react';
+import {useSelector} from "react-redux";
 
 const AddReplyButton = (props) => {
+    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
+
     const replyInput = useRef();
+
     return (
         <div>
             <button
                 type="button"
                 className='btn btn-lg btn-primary rounded-circle position-fixed'
                 style={style.button}
-                title='Add Reply'
+                title={isAuthenticated ? 'Reply' : 'Login Please.'}
+                disabled={!isAuthenticated}
                 data-toggle="modal"
                 data-target="#addReplyModal"
             ><span className='h2'>+</span>
@@ -36,8 +41,8 @@ const AddReplyButton = (props) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 className="btn btn-primary"
                                 data-dismiss="modal"
                                 onClick={()=> {

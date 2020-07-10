@@ -5,10 +5,23 @@ import { withRouter } from "react-router";
 import {useDispatch} from "react-redux";
 
 
-function IsLogedIn(props) {
+
+function IsLogedIn() {
     const dispatch = useDispatch();
 
     const user = JSON.parse(localStorage.getItem("user"));
+
+    const logout = ()=>{
+        Axios.post('/api/auth/logout')
+            .then(response=>{
+                console.log(response);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user');
+                dispatch({type: 'LOG_OUT'})
+            }).catch(error=>{
+            console.log(error);
+        });
+    }
 
     return (
         <Fragment>
@@ -18,18 +31,7 @@ function IsLogedIn(props) {
                 </Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link" to='' onClick={()=>{
-                    Axios.post('/api/auth/logout')
-                        .then(response=>{
-                            console.log(response);
-                            localStorage.removeItem('access_token');
-                            localStorage.removeItem('user');
-                            dispatch({type: 'LOG_OUT'})
-                            props.history.push('/');
-                        }).catch(error=>{
-                            console.log(error);
-                    });
-                }}>
+                <Link className="nav-link" to='' onClick={()=>logout()}>
                     <span className="h5">Logout</span>
                 </Link>
             </li>

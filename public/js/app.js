@@ -93535,15 +93535,21 @@ window.axios.defaults.headers.common = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
 
 
 var AddReplyButton = function AddReplyButton(props) {
+  var isAuthenticated = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["useSelector"])(function (state) {
+    return state.authReducer.isAuthenticated;
+  });
   var replyInput = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     className: "btn btn-lg btn-primary rounded-circle position-fixed",
     style: style.button,
-    title: "Add Reply",
+    title: isAuthenticated ? 'Reply' : 'Login Please.',
+    disabled: !isAuthenticated,
     "data-toggle": "modal",
     "data-target": "#addReplyModal"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -93985,9 +93991,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function IsLogedIn(props) {
+function IsLogedIn() {
   var dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["useDispatch"])();
   var user = JSON.parse(localStorage.getItem("user"));
+
+  var logout = function logout() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/auth/logout').then(function (response) {
+      console.log(response);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      dispatch({
+        type: 'LOG_OUT'
+      });
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
@@ -94001,17 +94021,7 @@ function IsLogedIn(props) {
     className: "nav-link",
     to: "",
     onClick: function onClick() {
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/auth/logout').then(function (response) {
-        console.log(response);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user');
-        dispatch({
-          type: 'LOG_OUT'
-        });
-        props.history.push('/');
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      return logout();
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
@@ -94100,6 +94110,11 @@ function LoginPage(props) {
       password = _useState4[0],
       setPassword = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+      _useState6 = _slicedToArray(_useState5, 2),
+      errors = _useState6[0],
+      setErrors = _useState6[1];
+
   var dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useDispatch"])();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row justify-content-center mt-5"
@@ -94117,25 +94132,31 @@ function LoginPage(props) {
     htmlFor: "email"
   }, "Email address"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "email",
-    className: "form-control",
+    className: "form-control ".concat((errors === null || errors === void 0 ? void 0 : errors.email) ? 'is-invalid' : ''),
     id: "email",
     name: "email",
     onChange: function onChange(e) {
       setEmail(e.target.value);
     }
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "invalid-feedback"
+  }, errors.email && errors.email[0])), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "password"
   }, "Password"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "password",
-    className: "form-control",
+    className: "form-control ".concat((errors === null || errors === void 0 ? void 0 : errors.password) ? 'is-invalid' : ''),
     id: "password",
     name: "password",
     onChange: function onChange(e) {
       setPassword(e.target.value);
     }
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "invalid-feedback"
+  }, errors.password && errors.password[0])), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "text-danger mb-2"
+  }, errors.message && errors.message)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-primary",
     onClick: function onClick(e) {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/auth/login', {
@@ -94146,12 +94167,17 @@ function LoginPage(props) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("access_token", response.data.access_token);
         window.axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access_token;
-        props.history.push('/');
+        props.history.goBack();
         dispatch({
           type: 'LOG_IN'
         });
       })["catch"](function (error) {
-        console.log(error.response.data);
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        } else {
+          setErrors(error.response.data);
+        }
+
         localStorage.removeItem('access_token');
       });
     }
@@ -94230,6 +94256,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -94245,8 +94272,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Reply = function Reply(props) {
   var reply = props.reply;
+  var isAuthenticated = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useSelector"])(function (state) {
+    return state.authReducer.isAuthenticated;
+  });
   var replyInput = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
@@ -94286,7 +94317,7 @@ var Reply = function Reply(props) {
     }
   }, "Update")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("blockquote", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
     className: "card-title"
-  }, update ? update.body : reply.body))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, update ? update.body : reply.body))), isAuthenticated && reply.user_id == JSON.parse(localStorage.getItem('user')).id && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
@@ -94487,7 +94518,7 @@ var Thread = /*#__PURE__*/function (_Component) {
           thread = _this$props.thread,
           deleteThread = _this$props.deleteThread;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card shadow"
+        className: "card shadow mb-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
