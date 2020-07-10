@@ -8,7 +8,7 @@ class Thread extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['owner'];
+    protected $with = ['owner', 'replies'];
 
     public function owner()
     {
@@ -17,6 +17,6 @@ class Thread extends Model
 
     public function replies()
     {
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class)->latest();
     }
 }

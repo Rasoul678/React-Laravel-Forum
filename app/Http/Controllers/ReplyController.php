@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Thread;
 use App\Reply;
 
 class ReplyController extends Controller
 {
+    public function index(Thread $thread)
+    {
+        return $thread->replies;
+    }
+
     public function store (Thread $thread){
         $attributes = request()->validate([
             'body'=>'required'
@@ -20,5 +24,21 @@ class ReplyController extends Controller
         $reply = Reply::create($attributes);
 
         return response()->json($reply);
+    }
+
+    public function update(Thread $thread, Reply $reply)
+    {
+        $reply->update([
+            'body'=>request('body')
+        ]);
+
+        return response()->json($reply->fresh());
+    }
+
+    public function destroy(Thread $thread, Reply $reply)
+    {
+        $reply->delete();
+
+        return response()->json($thread->fresh());
     }
 }
