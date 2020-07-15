@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./Header";
-import Threads from "./Threads";
-import CreateThread from "./CreateThread";
-import ShowThread from "./ShowThread";
+import Threads from "./threads/Threads";
+import CreateThread from "./threads/CreateThread";
+import ShowThread from "./threads/ShowThread";
 import  Home from './Home';
-import LoginPage from './LoginPage';
-import RegisterPage from "./RegisterPage";
+import LoginPage from './auth/LoginPage';
+import RegisterPage from "./auth/RegisterPage";
 
 class App extends Component {
     render() {

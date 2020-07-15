@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from 'axios';
 import {useDispatch, useSelector} from "react-redux";
-import {ADD_THREAD} from '../constants';
+import {ADD_THREAD} from '../../constants';
 
 function CreateThread(props) {
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);

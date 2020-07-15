@@ -1,17 +1,20 @@
-import React, { useState, useRef} from 'react';
+import React, { useState } from 'react';
+import {Link} from "react-router-dom";
 import Axios from 'axios';
 import {useSelector} from "react-redux";
+import Wysiwyg from "../Wysiwyg";
+import moment from "moment";
 
 const Reply = (props) =>{
     const {reply } = props;
 
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
 
-    const replyInput = useRef();
-
     const [editing, setEditing] = useState(false);
 
     const [update, setUpdate] = useState('');
+
+    const [body, setBody] = useState('');
 
     return (
         <div className='card my-3'>
@@ -19,21 +22,14 @@ const Reply = (props) =>{
                 {
                     editing ? (
                         <div className="form-group">
-                            <textarea
-                                className="form-control"
-                                id="body"
-                                rows="3"
-                                defaultValue={reply.body}
-                                ref={replyInput}
-                            ></textarea>
+                            <Wysiwyg trixId={reply.id} defaultValue={update.body || reply.body} onChange={(content)=>setBody(content)}></Wysiwyg>
                             <button
                                 className='btn btn-sm btn-primary mt-2'
                                 onClick={()=>{
-                                    Axios.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {body: replyInput.current.value})
+                                    Axios.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {body: body})
                                         .then(response=>{
                                             setEditing(false);
                                             setUpdate(response.data)
-                                            console.log(response.data)
                                         })
                                         .catch(error=>{
                                             console.log(error);
@@ -43,15 +39,28 @@ const Reply = (props) =>{
                         </div>
                     ) :(
                         <blockquote>
-                            <h5 className="card-title">
-                                {update ? update.body : reply.body}
-                            </h5>
+                            <div className="card-title">
+                                <div className="my-3">
+                                    <Link className="card-link" to="#/profile">
+                                        <span className="h4">{ reply.user.name}</span>
+                                    </Link>
+                                    { ' : ' }
+                                    <span className="h5">replied {moment(reply.created_at).fromNow()}</span>
+                                </div>
+                                <hr/>
+                                {update ? (
+                                    <div dangerouslySetInnerHTML={{__html: update.body}} />
+                                ): (
+                                    <div dangerouslySetInnerHTML={{__html: reply.body}} />
+                                )}
+
+                            </div>
                         </blockquote>
                     )
                 }
             </div>
             {
-                isAuthenticated && reply.user_id == JSON.parse(localStorage.getItem('user')).id &&
+                    isAuthenticated && reply.user_id == JSON.parse(localStorage.getItem('user')).id &&
                 <div className="card-footer">
                     <div className="form-group">
                         <button

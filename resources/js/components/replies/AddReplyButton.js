@@ -1,10 +1,11 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {useSelector} from "react-redux";
+import Wysiwyg from "../Wysiwyg";
 
 const AddReplyButton = (props) => {
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
 
-    const replyInput = useRef();
+    const [body, setBody] = useState('');
 
     return (
         <div>
@@ -31,12 +32,7 @@ const AddReplyButton = (props) => {
                         </div>
                         <div className="modal-body">
                             <div className="form-group">
-                                <textarea
-                                    className="form-control"
-                                    id="body"
-                                    rows="3"
-                                    ref={replyInput}
-                                ></textarea>
+                                <Wysiwyg onChange={(content)=>setBody(content)}></Wysiwyg>
                             </div>
                         </div>
                         <div className="modal-footer">
@@ -46,8 +42,7 @@ const AddReplyButton = (props) => {
                                 className="btn btn-primary"
                                 data-dismiss="modal"
                                 onClick={()=> {
-                                    props.add(replyInput);
-                                    replyInput.current.value = '';
+                                    props.add(body);
                                 }}
                             >Post</button>
                         </div>
