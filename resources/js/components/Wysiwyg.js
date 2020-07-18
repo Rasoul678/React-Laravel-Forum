@@ -23,7 +23,7 @@ class Wysiwyg extends Component {
                     id={ this.props.trixId }
                     defaultValue={this.props.defaultValue}
                 />
-                <trix-editor input={ this.props.trixId } ref={this.trixInput} placeholder='Have something to say?'/>
+                <trix-editor input={ this.props.trixId } ref={this.trixInput} placeholder={this.props.placeholder}/>
             </div>
         );
     }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Axios from 'axios';
 import {useDispatch, useSelector} from "react-redux";
 import {ADD_THREAD} from '../../constants';
+import Wysiwyg from "../Wysiwyg";
 
 function CreateThread(props) {
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
@@ -44,16 +45,7 @@ function CreateThread(props) {
 
                             <div className="form-group">
                                 <label htmlFor="body" className='h5'>Body</label>
-                                <textarea
-                                    className={`form-control ${errors.body ? "is-invalid" : ""}`}
-                                    id="body"
-                                    rows="3"
-                                    placeholder="Thread Body"
-                                    onChange={e => {
-                                        setBody(e.target.value)
-                                    }}
-                                ></textarea>
-                                {errors ? (<div className="invalid-feedback">{errors.body}</div>) : ""}
+                                <Wysiwyg trixId="threadBody" placeholder='Thread Body' onChange={(content)=>setBody(content)}></Wysiwyg>
                             </div>
                         </form>
                         <button

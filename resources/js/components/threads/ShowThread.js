@@ -57,9 +57,7 @@ const ShowThread = () => {
                                     </h5>
                                 </div>
                                 <div className="card-footer">
-                                    <p className="card-text h5">
-                                        {thread.body}
-                                    </p>
+                                    <div className="card-text" dangerouslySetInnerHTML={{__html: thread.body}} />
                                 </div>
                             </div>
                         </div>

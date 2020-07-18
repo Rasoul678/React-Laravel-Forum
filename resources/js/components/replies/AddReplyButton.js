@@ -32,7 +32,7 @@ const AddReplyButton = (props) => {
                         </div>
                         <div className="modal-body">
                             <div className="form-group">
-                                <Wysiwyg onChange={(content)=>setBody(content)}></Wysiwyg>
+                                <Wysiwyg placeholder="Have something to say?" onChange={(content)=>setBody(content)}></Wysiwyg>
                             </div>
                         </div>
                         <div className="modal-footer">

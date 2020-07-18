@@ -7,7 +7,7 @@ class Thread extends Component {
         const { thread, deleteThread, isAuthenticated } = this.props;
         return (
             <div className="card shadow mb-3">
-                <div className="card-body">
+                <div className="card-header">
                     <div className="d-flex justify-content-between">
                         <h3 className="card-title">
                             <Link className='card-link text-dark' to={`/threads/${thread.id}`} >
@@ -25,7 +25,9 @@ class Thread extends Component {
                             </Link>
                         }
                     </div>
-                    <p className="card-text">{thread.body}</p>
+                </div>
+                <div className="card-body">
+                    <div className="card-text" dangerouslySetInnerHTML={{__html: thread.body}} />
                 </div>
             </div>
         );
