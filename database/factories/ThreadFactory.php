@@ -14,3 +14,7 @@ $factory->define(Thread::class, function (Faker $faker) {
         'user_id'=>factory(User::class)
     ];
 });
+
+$factory->state(Thread::class, 'locked', [
+    'locked'=>true,
+]);

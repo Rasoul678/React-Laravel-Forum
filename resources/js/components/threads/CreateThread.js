@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from 'axios';
 import {useDispatch, useSelector} from "react-redux";
 import {ADD_THREAD} from '../../constants';
@@ -70,8 +70,8 @@ function CreateThread(props) {
                                         props.history.push("/threads");
                                     })
                                     .catch(error => {
-                                        console.log(error.response.data.errors);
-                                        setErrors(error.response.data.errors);
+                                        console.log(error.response.data);
+                                        setErrors(error.response.data);
                                     });
                             }}
                         >

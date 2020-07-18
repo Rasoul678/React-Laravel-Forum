@@ -21,7 +21,6 @@ class App extends Component {
                         <Route exact path="/threads/:id" component={ShowThread} />
                         <Route exact path='/login' component={LoginPage} />
                         <Route exact path='/register' component={RegisterPage} />
-
                     </Switch>
                 </div>
             </Router>

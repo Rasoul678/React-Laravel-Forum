@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 function LoginPage(props) {
     const [email, setEmail] = useState('');
@@ -8,6 +8,12 @@ function LoginPage(props) {
     const [errors, setErrors] = useState({});
 
     const dispatch = useDispatch();
+
+    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
+
+    if(isAuthenticated){
+        props.history.push('/');
+    }
 
     return (
         <div className='row justify-content-center mt-5'>
@@ -58,8 +64,8 @@ function LoginPage(props) {
                                     localStorage.setItem("access_token", response.data.access_token);
                                     window.axios.defaults.headers.common["Authorization"] =
                                         "Bearer " + response.data.access_token;
-                                    props.history.goBack();
                                     dispatch({type: 'LOG_IN'});
+                                    props.history.goBack();
                                 })
                                 .catch(error=>{
                                     if(error.response.data.errors){

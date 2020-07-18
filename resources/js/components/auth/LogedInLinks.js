@@ -6,13 +6,13 @@ import {useDispatch} from "react-redux";
 
 
 
-function IsLogedIn() {
+function LogedInLinks() {
     const dispatch = useDispatch();
 
     const user = JSON.parse(localStorage.getItem("user"));
 
     const logout = ()=>{
-        Axios.post('/api/auth/logout')
+        Axios.post('/api/logout')
             .then(response=>{
                 console.log(response);
                 localStorage.removeItem('access_token');
@@ -39,4 +39,4 @@ function IsLogedIn() {
     )
 }
 
-export default withRouter(IsLogedIn);
+export default withRouter(LogedInLinks);

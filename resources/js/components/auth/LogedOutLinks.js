@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Link} from "react-router-dom";
 
-function IsLogedOut (){
+function LogedOutLinks (){
     return (
         <Fragment>
             <li className="nav-item">
@@ -18,4 +18,4 @@ function IsLogedOut (){
     )
 }
 
-export default IsLogedOut;
+export default LogedOutLinks;
