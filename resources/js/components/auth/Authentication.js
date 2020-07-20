@@ -3,11 +3,11 @@ import LogedInLinks from "./LogedInLinks";
 import LogedOutLinks from "./LogedOutLinks";
 import {useSelector} from "react-redux";
 
-function Authentication (){
+function Authentication (props){
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
     return (
         <Fragment>
-            {isAuthenticated ? (<LogedInLinks />) : (<LogedOutLinks/>)}
+            {isAuthenticated && props.user ? (<LogedInLinks />) : (<LogedOutLinks/>)}
         </Fragment>
     )
 }

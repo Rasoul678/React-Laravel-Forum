@@ -17,7 +17,10 @@ class Threads extends Component {
     }
 
     deleteThread = id => {
-        Axios.delete("api/threads/" + id).then(response => {
+        const token = localStorage.getItem('access_token');
+        const headers = {Authorization: `Bearer ${token}`};
+        Axios.delete("api/threads/" + id, {headers}).then(response => {
+            console.log(response.data);
             this.setState({
                 ...this.state,
                 threads: this.state.threads.filter(thread => {

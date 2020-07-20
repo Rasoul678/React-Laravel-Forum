@@ -93948,11 +93948,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _auth_Authentication__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth/Authentication */ "./resources/js/components/auth/Authentication.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
 
 function Header() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+      _useState2 = _slicedToArray(_useState, 2),
+      authUser = _useState2[0],
+      setAuthUser = _useState2[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/auth/user', {
+      headers: headers
+    }).then(function (response) {
+      setAuthUser(response.data);
+    })["catch"](function (error) {
+      console.log('error');
+    });
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
     className: "navbar navbar-expand-sm navbar-dark bg-dark"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -94004,7 +94037,9 @@ function Header() {
     className: "h5"
   }, "Add Thread")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "navbar-nav ml-auto"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Authentication__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Authentication__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    user: authUser
+  })))));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Header);
@@ -94138,11 +94173,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function Authentication() {
+function Authentication(props) {
   var isAuthenticated = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(function (state) {
     return state.authReducer.isAuthenticated;
   });
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, isAuthenticated ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LogedInLinks__WEBPACK_IMPORTED_MODULE_1__["default"], null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LogedOutLinks__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, isAuthenticated && props.user ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LogedInLinks__WEBPACK_IMPORTED_MODULE_1__["default"], null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LogedOutLinks__WEBPACK_IMPORTED_MODULE_2__["default"], null));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Authentication);
@@ -94176,7 +94211,13 @@ function LogedInLinks() {
   var user = JSON.parse(localStorage.getItem("user"));
 
   var logout = function logout() {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/logout').then(function (response) {
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/logout', {
+      headers: headers
+    }).then(function (response) {
       console.log(response);
       localStorage.removeItem('access_token');
       localStorage.removeItem('user');
@@ -94904,7 +94945,13 @@ function CreateThread(props) {
     type: "button",
     className: "btn btn-primary mb-2",
     onClick: function onClick() {
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/threads", formData).then(function (response) {
+      var token = localStorage.getItem('access_token');
+      var headers = {
+        Authorization: "Bearer ".concat(token)
+      };
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/threads", formData, {
+        headers: headers
+      }).then(function (response) {
         console.log(response.data);
         dispatch({
           type: _constants__WEBPACK_IMPORTED_MODULE_3__["ADD_THREAD"],
@@ -95209,7 +95256,15 @@ var Threads = /*#__PURE__*/function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "deleteThread", function (id) {
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("api/threads/" + id).then(function (response) {
+      var token = localStorage.getItem('access_token');
+      var headers = {
+        Authorization: "Bearer ".concat(token)
+      };
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("api/threads/" + id, {
+        headers: headers
+      }).then(function (response) {
+        console.log(response.data);
+
         _this.setState(_objectSpread(_objectSpread({}, _this.state), {}, {
           threads: _this.state.threads.filter(function (thread) {
             return thread.id !== id;

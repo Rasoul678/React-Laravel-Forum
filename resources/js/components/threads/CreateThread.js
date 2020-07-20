@@ -52,7 +52,9 @@ function CreateThread(props) {
                             type="button"
                             className="btn btn-primary mb-2"
                             onClick={() => {
-                                Axios.post("/api/threads", formData)
+                                const token = localStorage.getItem('access_token');
+                                const headers = {Authorization: `Bearer ${token}`};
+                                Axios.post("/api/threads", formData, {headers})
                                     .then(response => {
                                         console.log(response.data);
                                         dispatch({

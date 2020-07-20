@@ -12,7 +12,9 @@ function LogedInLinks() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     const logout = ()=>{
-        Axios.post('/api/logout')
+        const token = localStorage.getItem('access_token');
+        const headers = {Authorization: `Bearer ${token}`};
+        Axios.get('/api/auth/logout', {headers})
             .then(response=>{
                 console.log(response);
                 localStorage.removeItem('access_token');

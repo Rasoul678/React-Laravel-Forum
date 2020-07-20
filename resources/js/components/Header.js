@@ -1,8 +1,21 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import Authentication from './auth/Authentication';
+import Axios from "axios";
 
 function Header() {
+    const [authUser, setAuthUser] = useState({});
+
+    useEffect(()=>{
+        const token = localStorage.getItem('access_token');
+        const headers = {Authorization: `Bearer ${token}`};
+        Axios.get('/api/auth/user', { headers })
+            .then(response=>{
+                setAuthUser(response.data);
+            }).catch(error=>{
+                console.log('error');
+        });
+    }, [])
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
@@ -55,7 +68,7 @@ function Header() {
                         </li>
                     </ul>
                     <ul className='navbar-nav ml-auto'>
-                        <Authentication/>
+                        <Authentication user={authUser}/>
                     </ul>
                 </div>
             </div>

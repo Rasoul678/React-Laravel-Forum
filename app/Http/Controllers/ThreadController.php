@@ -30,11 +30,12 @@ class ThreadController extends Controller
     }
 
     public function show(Thread $thread){
-        return $thread = Thread::where('id', $thread->id)->get();
+        return $thread = Thread::whereId($thread->id)->get();
     }
 
 
     public function destroy(Thread $thread){
         $thread->delete();
+        return response()->json('Your Thread has been deleted.');
     }
 }
