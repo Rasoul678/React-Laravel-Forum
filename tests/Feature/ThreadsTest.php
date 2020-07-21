@@ -14,6 +14,27 @@ class ThreadsTest extends TestCase
     /**
      * @test
      */
+    public function a_user_can_see_all_threads ()
+    {
+        $thread = create(Thread::class);
+
+        $this->get('/api/threads')->assertSee($thread->title);
+    }
+
+    /**
+     * @test
+     */
+    public function a_user_can_see_a_single_thread ()
+    {
+        $thread = create(Thread::class);
+
+        $this->get('/api/threads/' . $thread->channel->slug . "/" . $thread->id)->assertSee($thread->body);
+    }
+
+
+    /**
+     * @test
+     */
     public function unauthorized_users_may_not_create_thread()
     {
         $thread = make(Thread::class);

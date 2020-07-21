@@ -93925,7 +93925,7 @@ var App = /*#__PURE__*/function (_Component) {
         component: _threads_CreateThread__WEBPACK_IMPORTED_MODULE_4__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
         exact: true,
-        path: "/threads/:id",
+        path: "/threads/:channel/:id",
         component: _threads_ShowThread__WEBPACK_IMPORTED_MODULE_5__["default"]
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
         exact: true,
@@ -93994,7 +93994,7 @@ function Header() {
     }).then(function (response) {
       setAuthUser(response.data);
     })["catch"](function (error) {
-      console.log('error');
+      console.log(error);
     });
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
@@ -94006,7 +94006,7 @@ function Header() {
     to: "/"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h3"
-  }, "Forum")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, "LaraDev")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "navbar-toggler",
     type: "button",
     "data-toggle": "collapse",
@@ -94136,10 +94136,7 @@ var Wysiwyg = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      console.log(this.props);
       this.trixInput.current.addEventListener("trix-change", function (event) {
-        console.log("trix change event fired");
-
         _this2.props.onChange(event.target.innerHTML);
       });
     }
@@ -94627,7 +94624,7 @@ var AddReplyButton = function AddReplyButton(props) {
     type: "button",
     className: "btn btn-lg btn-primary rounded-circle position-fixed",
     style: style.button,
-    title: isAuthenticated ? 'Reply' : 'Login Please.',
+    title: isAuthenticated ? 'Leave a Reply' : 'Login and Reply.',
     disabled: !isAuthenticated,
     "data-toggle": "modal",
     "data-target": "#addReplyModal"
@@ -94677,7 +94674,6 @@ var AddReplyButton = function AddReplyButton(props) {
     "data-dismiss": "modal",
     onClick: function onClick() {
       props.add(body);
-      flash('Your reply has been created.', "success");
     }
   }, "Post"))))));
 };
@@ -94801,7 +94797,7 @@ var Reply = function Reply(props) {
       }).then(function (response) {
         setEditing(false);
         setUpdate(response.data);
-        flash('Your reply has been edited.', "success");
+        flash('Your reply has been updated.', "success");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -94815,9 +94811,9 @@ var Reply = function Reply(props) {
     to: "#/profile"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h4"
-  }, reply.user.name)), ' : ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+  }, reply.owner.name)), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
-  }, "replied ", moment__WEBPACK_IMPORTED_MODULE_5___default()(reply.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), update ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "said: ", moment__WEBPACK_IMPORTED_MODULE_5___default()(reply.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), update ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     dangerouslySetInnerHTML: {
       __html: update.body
     }
@@ -94844,7 +94840,6 @@ var Reply = function Reply(props) {
     className: "btn btn-sm btn-danger",
     onClick: function onClick() {
       props["delete"](reply);
-      flash("Your reply has been deleted.", "danger");
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash",
@@ -94909,18 +94904,68 @@ function CreateThread(props) {
       body = _useState4[0],
       setBody = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState6 = _slicedToArray(_useState5, 2),
-      errors = _useState6[0],
-      setErrors = _useState6[1];
+      channel = _useState6[0],
+      setChannel = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      channels = _useState8[0],
+      setChannels = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState10 = _slicedToArray(_useState9, 2),
+      errors = _useState10[0],
+      setErrors = _useState10[1];
 
   var user = JSON.parse(localStorage.getItem('user'));
   var formData = {
     title: title,
     body: body,
-    user_id: user === null || user === void 0 ? void 0 : user.id
+    user_id: user === null || user === void 0 ? void 0 : user.id,
+    channel_id: channel
   };
   var dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useDispatch"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/channels').then(function (response) {
+      setChannels(response.data);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }, []);
+
+  var createThread = function createThread() {
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/threads", formData, {
+      headers: headers
+    }).then(function (response) {
+      console.log(response.data);
+      dispatch({
+        type: _constants__WEBPACK_IMPORTED_MODULE_3__["ADD_THREAD"],
+        thread: response.data
+      });
+      props.history.push(response.data.path);
+      flash("Your thread has been created.", "success");
+    })["catch"](function (error) {
+      console.log(error.response.data);
+      var errors = error.response.data.errors;
+
+      if (errors.channel_id) {
+        flash("The channel field is required.", "danger");
+      } else if (errors.title) {
+        flash(errors.title[0], "danger");
+      } else if (errors.body) {
+        flash(errors.body[0], "danger");
+      } else {
+        return;
+      }
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row justify-content-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -94934,20 +94979,36 @@ function CreateThread(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "channel",
+    className: "h5"
+  }, "Channel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    className: "form-control",
+    id: "channel",
+    onChange: function onChange(e) {
+      return setChannel(e.target.value);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "Choose a Channel ..."), channels === null || channels === void 0 ? void 0 : channels.map(function (channel) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: channel.id,
+      key: channel.id
+    }, channel.name);
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "title",
     className: "h5"
   }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    type: "test",
-    className: "form-control ".concat(errors.title ? "is-invalid" : ""),
+    type: "text",
+    className: "form-control",
     id: "title",
     name: "title",
     placeholder: "Thread title",
     onChange: function onChange(e) {
       setTitle(e.target.value);
     }
-  }), errors ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "invalid-feedback"
-  }, errors.title) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "body",
@@ -94962,24 +95023,7 @@ function CreateThread(props) {
     type: "button",
     className: "btn btn-primary mb-2",
     onClick: function onClick() {
-      var token = localStorage.getItem('access_token');
-      var headers = {
-        Authorization: "Bearer ".concat(token)
-      };
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/threads", formData, {
-        headers: headers
-      }).then(function (response) {
-        console.log(response.data);
-        dispatch({
-          type: _constants__WEBPACK_IMPORTED_MODULE_3__["ADD_THREAD"],
-          thread: response.data
-        });
-        props.history.push("/threads");
-        flash("Your thread has been created.", "success");
-      })["catch"](function (error) {
-        console.log(error.response.data);
-        setErrors(error.response.data);
-      });
+      return createThread();
     }
   }, "Create")))));
 }
@@ -95027,6 +95071,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var ShowThread = function ShowThread() {
   var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
+      channel = _useParams.channel,
       id = _useParams.id;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
@@ -95042,6 +95087,7 @@ var ShowThread = function ShowThread() {
   var deleteReply = function deleteReply(reply) {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id).then(function (response) {
       setThread(response.data);
+      flash("Your reply has been deleted.", "danger");
     })["catch"]();
   };
 
@@ -95051,13 +95097,14 @@ var ShowThread = function ShowThread() {
       auth_user_id: JSON.parse(localStorage.getItem('user')).id
     }).then(function (response) {
       setNewReply(response.data);
+      flash('Your reply has been created.', "success");
     })["catch"](function (error) {
       console.log(error.response.data.message);
     });
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(id)).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
       setThread(response.data[0]);
     })["catch"](function (error) {
       console.log(error.response);
@@ -95080,7 +95127,7 @@ var ShowThread = function ShowThread() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "",
     className: "card-link h4"
-  }, thread.owner.name), " ", "posted: ", ' ', moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, thread.creator.name), " ", "posted: ", ' ', moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-text",
@@ -95172,7 +95219,7 @@ var Thread = /*#__PURE__*/function (_Component) {
         className: "card-title"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         className: "card-link text-dark",
-        to: "/threads/".concat(thread.id)
+        to: thread.path
       }, thread.title)), isAuthenticated && thread.user_id == JSON.parse(localStorage.getItem('user')).id && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "",
         className: "h4 text-danger",
@@ -95423,7 +95470,6 @@ var Flash = function Flash() {
   };
 
   document.querySelector('#flash').addEventListener('onFlash', function (e) {
-    console.log(e.detail.message);
     setMessage(e.detail.message);
     setLevel(e.detail.level);
     showFlash();

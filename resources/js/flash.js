@@ -20,7 +20,6 @@ const Flash = ()=>{
     }
 
     document.querySelector('#flash').addEventListener('onFlash', (e)=>{
-        console.log(e.detail.message);
         setMessage(e.detail.message);
         setLevel(e.detail.level);
         showFlash();

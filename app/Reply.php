@@ -8,15 +8,15 @@ class Reply extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['user'];
+    protected $with = ['owner'];
 
     public function thread ()
     {
         return $this->belongsTo(Thread::class);
     }
 
-    public function user ()
+    public function owner ()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

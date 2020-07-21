@@ -13,7 +13,7 @@ const AddReplyButton = (props) => {
                 type="button"
                 className='btn btn-lg btn-primary rounded-circle position-fixed'
                 style={style.button}
-                title={isAuthenticated ? 'Reply' : 'Login Please.'}
+                title={isAuthenticated ? 'Leave a Reply' : 'Login and Reply.'}
                 disabled={!isAuthenticated}
                 data-toggle="modal"
                 data-target="#addReplyModal"
@@ -43,7 +43,6 @@ const AddReplyButton = (props) => {
                                 data-dismiss="modal"
                                 onClick={()=> {
                                     props.add(body);
-                                    flash('Your reply has been created.', "success");
                                 }}
                             >Post</button>
                         </div>

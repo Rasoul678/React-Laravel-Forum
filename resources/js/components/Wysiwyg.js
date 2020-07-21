@@ -8,9 +8,7 @@ class Wysiwyg extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         this.trixInput.current.addEventListener("trix-change", event => {
-            console.log("trix change event fired");
             this.props.onChange(event.target.innerHTML);
         });
     }

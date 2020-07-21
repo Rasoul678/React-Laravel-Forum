@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Thread;
 
 class ThreadController extends Controller
@@ -19,7 +20,8 @@ class ThreadController extends Controller
 
         $attributes = request()->validate([
             'title'=>'required',
-            'body'=>'required'
+            'body'=>'required',
+            'channel_id'=>'required'
         ]);
 
         $attributes['user_id'] = request('user_id');
@@ -29,7 +31,7 @@ class ThreadController extends Controller
         return response()->json($thread);
     }
 
-    public function show(Thread $thread){
+    public function show(Channel $channel,Thread $thread){
         return $thread = Thread::whereId($thread->id)->get();
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from 'axios';
 import {useDispatch, useSelector} from "react-redux";
 import {ADD_THREAD} from '../../constants';
@@ -10,15 +10,55 @@ function CreateThread(props) {
     if(! isAuthenticated){
         props.history.push('/login');
     }
+
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+    const [channel, setChannel] = useState('');
+    const [channels, setChannels] = useState([]);
     const [errors, setErrors] = useState(false);
-
     const user = JSON.parse(localStorage.getItem('user'));
 
-    const formData = { title, body, user_id: user?.id };
+    const formData = { title, body, user_id: user?.id, channel_id:  channel};
 
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        Axios.get('/api/channels')
+            .then(response=>{
+                setChannels(response.data);
+            })
+            .catch(error=>{
+                console.log(error);
+            })
+    }, [])
+
+    const createThread = ()=>{
+        const token = localStorage.getItem('access_token');
+        const headers = {Authorization: `Bearer ${token}`};
+        Axios.post("/api/threads", formData, {headers})
+            .then(response => {
+                console.log(response.data);
+                dispatch({
+                    type: ADD_THREAD,
+                    thread: response.data
+                });
+                props.history.push(response.data.path);
+                flash("Your thread has been created.", "success")
+            })
+            .catch(error => {
+                console.log(error.response.data);
+                let errors = error.response.data.errors;
+                if(errors.channel_id){
+                    flash("The channel field is required.", "danger");
+                }else if(errors.title){
+                    flash(errors.title[0], "danger");
+                }else if(errors.body){
+                    flash(errors.body[0], "danger");
+                }else{
+                    return;
+                }
+            });
+    }
 
     return (
         <div className="row justify-content-center">
@@ -29,18 +69,30 @@ function CreateThread(props) {
                     </h3>
                     <div className="card-body">
                         <form>
+
+                            <div className="form-group">
+                                <label htmlFor="channel" className='h5'>Channel</label>
+                                <select className="form-control" id="channel" onChange={e=>setChannel(e.target.value)}>
+                                    <option value=''>Choose a Channel ...</option>
+                                    {
+                                        channels?.map(channel=>{
+                                            return (<option value={channel.id} key={channel.id}>{channel.name}</option>)
+                                        })
+                                    }
+                                </select>
+                            </div>
+
                             <div className="form-group">
                                 <label htmlFor="title" className='h5'>Title</label>
                                 <input
-                                    type="test"
-                                    className={`form-control ${errors.title ? "is-invalid" : ""}`}
+                                    type="text"
+                                    className="form-control"
                                     id="title"
                                     name="title"
                                     placeholder="Thread title"
                                     onChange={e => {
                                         setTitle(e.target.value)
                                     }}/>
-                                    {errors ? (<div className="invalid-feedback">{errors.title}</div>) : ""}
                             </div>
 
                             <div className="form-group">
@@ -51,24 +103,7 @@ function CreateThread(props) {
                         <button
                             type="button"
                             className="btn btn-primary mb-2"
-                            onClick={() => {
-                                const token = localStorage.getItem('access_token');
-                                const headers = {Authorization: `Bearer ${token}`};
-                                Axios.post("/api/threads", formData, {headers})
-                                    .then(response => {
-                                        console.log(response.data);
-                                        dispatch({
-                                            type: ADD_THREAD,
-                                            thread: response.data
-                                        });
-                                        props.history.push("/threads");
-                                        flash("Your thread has been created.", "success")
-                                    })
-                                    .catch(error => {
-                                        console.log(error.response.data);
-                                        setErrors(error.response.data);
-                                    });
-                            }}
+                            onClick={() => createThread()}
                         >
                             Create
                         </button>

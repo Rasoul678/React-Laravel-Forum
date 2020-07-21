@@ -8,9 +8,11 @@ class Thread extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['owner', 'replies'];
+    protected $with = ['creator', 'replies', 'channel'];
 
-    public function owner()
+    protected $appends = ['path'];
+
+    public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -18,5 +20,15 @@ class Thread extends Model
     public function replies()
     {
         return $this->hasMany(Reply::class)->latest();
+    }
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
+
+    public function getPathAttribute()
+    {
+        return "/threads/" . $this->channel->slug . "/" . $this->id;
     }
 }

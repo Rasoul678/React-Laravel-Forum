@@ -18,7 +18,7 @@ class App extends Component {
                         <Route exact path='/' component={Home} />
                         <Route exact path="/threads" component={Threads} />
                         <Route exact path="/threads/create" component={CreateThread} />
-                        <Route exact path="/threads/:id" component={ShowThread} />
+                        <Route exact path="/threads/:channel/:id" component={ShowThread} />
                         <Route exact path='/login' component={LoginPage} />
                         <Route exact path='/register' component={RegisterPage} />
                     </Switch>

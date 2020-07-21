@@ -6,7 +6,7 @@ import Replies from '../replies/Replies';
 import AddReplyButton from "../replies/AddReplyButton";
 
 const ShowThread = () => {
-    const { id } = useParams();
+    const { channel, id } = useParams();
 
     const [thread, setThread] = useState(null);
 
@@ -16,6 +16,7 @@ const ShowThread = () => {
         Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id)
             .then(response=>{
                 setThread(response.data);
+                flash("Your reply has been deleted.", "danger");
             })
             .catch();
     };
@@ -24,13 +25,14 @@ const ShowThread = () => {
         Axios.post(`/api/threads/${thread.id}/replies`,{body: replyBody, auth_user_id: JSON.parse(localStorage.getItem('user')).id})
             .then(response=>{
                 setNewReply(response.data);
+                flash('Your reply has been created.', "success");
             }).catch(error=>{
             console.log(error.response.data.message);
         });
     }
 
     useEffect(() => {
-        Axios.get(`/api/threads/${id}`)
+        Axios.get(`/api/threads/${channel}/${id}`)
             .then(response => {
                 setThread(response.data[0]);
             })
@@ -50,7 +52,7 @@ const ShowThread = () => {
                                 <div className="d-flex justify-content-between py-2">
                                     <h5 className="card-title align-self-center">
                                         <a href="" className="card-link h4">
-                                            {thread.owner.name}
+                                            {thread.creator.name}
                                         </a>{" "}
                                         posted: {' '}
                                         {moment(thread.created_at).fromNow()}

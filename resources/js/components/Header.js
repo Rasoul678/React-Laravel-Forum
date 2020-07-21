@@ -13,14 +13,14 @@ function Header() {
             .then(response=>{
                 setAuthUser(response.data);
             }).catch(error=>{
-                console.log('error');
+                console.log(error);
         });
     }, [])
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
                 <Link className="navbar-brand" to="/">
-                    <span className='h3'>Forum</span>
+                    <span className='h3'>LaraDev</span>
                 </Link>
                 <button
                     className="navbar-toggler"

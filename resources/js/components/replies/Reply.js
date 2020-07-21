@@ -30,7 +30,7 @@ const Reply = (props) =>{
                                         .then(response=>{
                                             setEditing(false);
                                             setUpdate(response.data)
-                                            flash('Your reply has been edited.', "success");
+                                            flash('Your reply has been updated.', "success");
                                         })
                                         .catch(error=>{
                                             console.log(error);
@@ -43,10 +43,10 @@ const Reply = (props) =>{
                             <div className="card-title">
                                 <div className="my-3">
                                     <Link className="card-link" to="#/profile">
-                                        <span className="h4">{ reply.user.name}</span>
+                                        <span className="h4">{ reply.owner.name}</span>
                                     </Link>
-                                    { ' : ' }
-                                    <span className="h5">replied {moment(reply.created_at).fromNow()}</span>
+                                    {" "}
+                                    <span className="h5">said: {moment(reply.created_at).fromNow()}</span>
                                 </div>
                                 <hr/>
                                 {update ? (
@@ -78,7 +78,6 @@ const Reply = (props) =>{
                             className='btn btn-sm btn-danger'
                             onClick={()=> {
                                 props.delete(reply);
-                                flash("Your reply has been deleted.", "danger")
                             }}
                         >
                             <i className="fa fa-trash" aria-hidden="true"></i>
