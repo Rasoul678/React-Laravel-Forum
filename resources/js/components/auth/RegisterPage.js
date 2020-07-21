@@ -94,6 +94,7 @@ const RegisterPage = (props)=>{
                                 .then(response=>{
                                     console.log(response);
                                     props.history.push('/');
+                                    flash("You can log in now.", "success");
                                 })
                                 .catch(error=>{
                                     console.log(error);

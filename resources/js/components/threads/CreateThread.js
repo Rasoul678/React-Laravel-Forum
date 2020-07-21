@@ -62,6 +62,7 @@ function CreateThread(props) {
                                             thread: response.data
                                         });
                                         props.history.push("/threads");
+                                        flash("Your thread has been created.", "success")
                                     })
                                     .catch(error => {
                                         console.log(error.response.data);

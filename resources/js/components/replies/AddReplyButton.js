@@ -43,6 +43,7 @@ const AddReplyButton = (props) => {
                                 data-dismiss="modal"
                                 onClick={()=> {
                                     props.add(body);
+                                    flash('Your reply has been created.', "success");
                                 }}
                             >Post</button>
                         </div>

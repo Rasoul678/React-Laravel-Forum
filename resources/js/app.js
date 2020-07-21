@@ -13,3 +13,9 @@ require('./bootstrap');
  */
 
 require('./index');
+require('./flash');
+
+window.flash = (message, level)=>{
+    document.querySelector("#flash")
+        .dispatchEvent(new CustomEvent("onFlash", {detail: {message, level}}));
+}

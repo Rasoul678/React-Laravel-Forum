@@ -93769,6 +93769,17 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! ./index */ "./resources/js/index.js");
 
+__webpack_require__(/*! ./flash */ "./resources/js/flash.js");
+
+window.flash = function (message, level) {
+  document.querySelector("#flash").dispatchEvent(new CustomEvent("onFlash", {
+    detail: {
+      message: message,
+      level: level
+    }
+  }));
+};
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -94219,6 +94230,7 @@ function LogedInLinks() {
       headers: headers
     }).then(function (response) {
       console.log(response);
+      flash("See you!", "success");
       localStorage.removeItem('access_token');
       localStorage.removeItem('user');
       dispatch({
@@ -94400,6 +94412,7 @@ function LoginPage(props) {
           type: 'LOG_IN'
         });
         props.history.goBack();
+        flash("Welcome " + response.data.user.name, "success");
       })["catch"](function (error) {
         if (error.response.data.errors) {
           setErrors(error.response.data.errors);
@@ -94559,6 +94572,7 @@ var RegisterPage = function RegisterPage(props) {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/auth/register', formData).then(function (response) {
         console.log(response);
         props.history.push('/');
+        flash("You can log in now.", "success");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -94663,6 +94677,7 @@ var AddReplyButton = function AddReplyButton(props) {
     "data-dismiss": "modal",
     onClick: function onClick() {
       props.add(body);
+      flash('Your reply has been created.', "success");
     }
   }, "Post"))))));
 };
@@ -94786,6 +94801,7 @@ var Reply = function Reply(props) {
       }).then(function (response) {
         setEditing(false);
         setUpdate(response.data);
+        flash('Your reply has been edited.', "success");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -94827,7 +94843,8 @@ var Reply = function Reply(props) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-sm btn-danger",
     onClick: function onClick() {
-      return props["delete"](reply);
+      props["delete"](reply);
+      flash("Your reply has been deleted.", "danger");
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash",
@@ -94958,6 +94975,7 @@ function CreateThread(props) {
           thread: response.data
         });
         props.history.push("/threads");
+        flash("Your thread has been created.", "success");
       })["catch"](function (error) {
         console.log(error.response.data);
         setErrors(error.response.data);
@@ -95270,6 +95288,8 @@ var Threads = /*#__PURE__*/function (_Component) {
             return thread.id !== id;
           })
         }));
+
+        flash("Your thread has been deleted", "danger");
       });
     });
 
@@ -95341,6 +95361,92 @@ var ADD_THREAD = 'ADD_THREAD';
 var DELETE_THREAD = 'DELETE_THREAD';
 var UPDATE_THREAD = 'UPDATE_THREAD';
 var ADD_REPLY = 'ADD_REPLY';
+
+/***/ }),
+
+/***/ "./resources/js/flash.js":
+/*!*******************************!*\
+  !*** ./resources/js/flash.js ***!
+  \*******************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./resources/js/store.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+var Flash = function Flash() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      show = _useState2[0],
+      setShow = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState4 = _slicedToArray(_useState3, 2),
+      message = _useState4[0],
+      setMessage = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('success'),
+      _useState6 = _slicedToArray(_useState5, 2),
+      level = _useState6[0],
+      setLevel = _useState6[1];
+
+  var showFlash = function showFlash() {
+    setShow(true);
+  };
+
+  var hideFlash = function hideFlash() {
+    setTimeout(function () {
+      setShow(false);
+    }, 3000);
+  };
+
+  document.querySelector('#flash').addEventListener('onFlash', function (e) {
+    console.log(e.detail.message);
+    setMessage(e.detail.message);
+    setLevel(e.detail.level);
+    showFlash();
+    hideFlash();
+  });
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, show && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "position-fixed",
+    style: style
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "alert alert-".concat(level, " d-inline h6")
+  }, message)));
+};
+
+var style = {
+  bottom: '30px',
+  right: '30px'
+};
+
+if (document.getElementById("flash")) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__["Provider"], {
+    store: _store__WEBPACK_IMPORTED_MODULE_3__["default"]
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Flash, null)), document.getElementById("flash"));
+}
 
 /***/ }),
 

@@ -26,5 +26,7 @@
 <body>
     <div id="app">
     </div>
+    <div id="flash">
+    </div>
 </body>
 </html>

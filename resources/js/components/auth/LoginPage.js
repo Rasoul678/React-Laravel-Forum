@@ -66,6 +66,7 @@ function LoginPage(props) {
                                         "Bearer " + response.data.access_token;
                                     dispatch({type: 'LOG_IN'});
                                     props.history.goBack();
+                                    flash("Welcome " +response.data.user.name, "success");
                                 })
                                 .catch(error=>{
                                     if(error.response.data.errors){

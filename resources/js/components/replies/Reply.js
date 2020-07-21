@@ -30,6 +30,7 @@ const Reply = (props) =>{
                                         .then(response=>{
                                             setEditing(false);
                                             setUpdate(response.data)
+                                            flash('Your reply has been edited.', "success");
                                         })
                                         .catch(error=>{
                                             console.log(error);
@@ -75,7 +76,10 @@ const Reply = (props) =>{
                         </button>
                         <button
                             className='btn btn-sm btn-danger'
-                            onClick={()=>props.delete(reply)}
+                            onClick={()=> {
+                                props.delete(reply);
+                                flash("Your reply has been deleted.", "danger")
+                            }}
                         >
                             <i className="fa fa-trash" aria-hidden="true"></i>
                         </button>

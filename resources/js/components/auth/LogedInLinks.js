@@ -17,6 +17,7 @@ function LogedInLinks() {
         Axios.get('/api/auth/logout', {headers})
             .then(response=>{
                 console.log(response);
+                flash("See you!", "success");
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('user');
                 dispatch({type: 'LOG_OUT'})
