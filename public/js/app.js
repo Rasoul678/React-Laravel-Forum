@@ -93978,8 +93978,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function Header() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+
+function Header(props) {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
       authUser = _useState2[0],
       setAuthUser = _useState2[1];
@@ -93989,6 +93990,7 @@ function Header() {
       channels = _useState4[0],
       setChannels = _useState4[1];
 
+  var myThreadsPath = props.location.search ? "".concat(props.location.pathname + props.location.search, "&by=").concat(authUser.name) : "".concat(props.location.pathname, "?by=").concat(authUser.name);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var token = localStorage.getItem('access_token');
     var headers = {
@@ -93999,6 +94001,7 @@ function Header() {
     }).then(function (response) {
       setAuthUser(response.data);
     })["catch"](function (error) {
+      setAuthUser(false);
       console.log(error);
     });
     axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/channels').then(function (response) {
@@ -94006,7 +94009,7 @@ function Header() {
     })["catch"](function (error) {
       console.log(error);
     });
-  }, []);
+  }, [props.location.pathname]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
     className: "navbar navbar-expand-sm navbar-dark bg-dark"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -94043,13 +94046,16 @@ function Header() {
     "aria-expanded": "false"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
-  }, "Threads")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "Browse")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "dropdown-menu",
     "aria-labelledby": "threadsDropdown"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "dropdown-item",
     to: "/threads"
-  }, "All Threads"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, "All Threads"), authUser && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "dropdown-item",
+    to: myThreadsPath
+  }, "My Threads"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item dropdown"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "navbar-brand dropdown-toggle",
@@ -94068,7 +94074,7 @@ function Header() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
       className: "dropdown-item",
       key: channel.id,
-      to: "/threads?channel=" + channel.slug
+      to: "/threads?channel=".concat(channel.slug)
     }, channel.name);
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "navbar-nav ml-auto"
@@ -94077,7 +94083,7 @@ function Header() {
   })))));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (Header);
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Header));
 
 /***/ }),
 

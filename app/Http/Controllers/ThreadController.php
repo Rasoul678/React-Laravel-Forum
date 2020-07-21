@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Thread;
+use App\User;
 
 class ThreadController extends Controller
 {
@@ -13,13 +14,7 @@ class ThreadController extends Controller
     }
 
     public function index(){
-        if(request()->has('channel'))
-        {
-            $channel = Channel::whereSlug(request('channel'))->first();
-
-            return $channel->threads()->latest()->get();
-        }
-        return Thread::latest()->get();
+        return $this->getThreads();
     }
 
     public function store(){
@@ -45,5 +40,26 @@ class ThreadController extends Controller
     public function destroy(Thread $thread){
         $thread->delete();
         return response()->json('Your Thread has been deleted.');
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getThreads()
+    {
+        if (request()->has('channel')) {
+            $channel = Channel::whereSlug(request('channel'))->first();
+
+            $threads = $channel->threads()->latest();
+        } else {
+            $threads = Thread::latest();
+        }
+
+        if (request()->has('by')) {
+            $user = User::whereName(request('by'))->firstOrFail();
+
+            $threads = $threads->where('user_id', $user->id);
+        }
+        return $threads->get();
     }
 }

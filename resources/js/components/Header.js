@@ -1,11 +1,18 @@
 import React, {useEffect, useState} from "react";
+import {withRouter} from "react-router-dom";
 import { Link } from "react-router-dom";
 import Authentication from './auth/Authentication';
 import Axios from "axios";
 
-function Header() {
-    const [authUser, setAuthUser] = useState({});
+function Header(props) {
+    const [authUser, setAuthUser] = useState(false);
     const [channels, setChannels] = useState([]);
+
+    const myThreadsPath = props.location.search ? (
+        `${props.location.pathname + props.location.search}&by=${authUser.name}`
+    ) : (
+        `${props.location.pathname}?by=${authUser.name}`
+    );
 
     useEffect(()=>{
         const token = localStorage.getItem('access_token');
@@ -14,6 +21,7 @@ function Header() {
             .then(response=>{
                 setAuthUser(response.data);
             }).catch(error=>{
+                setAuthUser(false);
                 console.log(error);
         });
         Axios.get('/api/channels')
@@ -22,7 +30,7 @@ function Header() {
             }).catch(error=>{
             console.log(error);
         });
-    }, [])
+    }, [props.location.pathname])
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
@@ -56,7 +64,7 @@ function Header() {
                                 aria-haspopup="true"
                                 aria-expanded="false"
                             >
-                                <span className='h5'>Threads</span>
+                                <span className='h5'>Browse</span>
                             </a>
 
                             <div
@@ -66,6 +74,12 @@ function Header() {
                                 <Link className="dropdown-item" to="/threads">
                                     All Threads
                                 </Link>
+                                {
+                                    authUser &&
+                                    <Link className="dropdown-item" to={myThreadsPath}>
+                                        My Threads
+                                    </Link>
+                                }
                             </div>
                         </li>
                         <li className="nav-item dropdown">
@@ -88,7 +102,7 @@ function Header() {
                                 {
                                     channels?.map(channel=>{
                                         return (
-                                            <Link className="dropdown-item" key={channel.id} to={`/threads?channel=` + channel.slug}>
+                                            <Link className="dropdown-item" key={channel.id} to={`/threads?channel=${channel.slug}`}>
                                                 {channel.name}
                                             </Link>
                                         )
@@ -106,4 +120,4 @@ function Header() {
     );
 }
 
-export default  Header;
+export default  withRouter(Header);
