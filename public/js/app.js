@@ -93984,6 +93984,11 @@ function Header() {
       authUser = _useState2[0],
       setAuthUser = _useState2[1];
 
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      channels = _useState4[0],
+      setChannels = _useState4[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var token = localStorage.getItem('access_token');
     var headers = {
@@ -93993,6 +93998,11 @@ function Header() {
       headers: headers
     }).then(function (response) {
       setAuthUser(response.data);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+    axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/channels').then(function (response) {
+      setChannels(response.data);
     })["catch"](function (error) {
       console.log(error);
     });
@@ -94024,9 +94034,9 @@ function Header() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item dropdown"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-    className: "nav-link dropdown-toggle",
+    className: "navbar-brand dropdown-toggle",
     to: "#",
-    id: "navbarDropdown",
+    id: "threadsDropdown",
     role: "button",
     "data-toggle": "dropdown",
     "aria-haspopup": "true",
@@ -94035,18 +94045,32 @@ function Header() {
     className: "h5"
   }, "Threads")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "dropdown-menu",
-    "aria-labelledby": "navbarDropdown"
+    "aria-labelledby": "threadsDropdown"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "dropdown-item",
     to: "/threads"
   }, "All Threads"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-    className: "nav-item"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    className: "nav-link",
-    to: "/threads/create"
+    className: "nav-item dropdown"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    className: "navbar-brand dropdown-toggle",
+    to: "#",
+    id: "channelsDropdown",
+    role: "button",
+    "data-toggle": "dropdown",
+    "aria-haspopup": "true",
+    "aria-expanded": "false"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
-  }, "Add Thread")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+  }, "Channels")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dropdown-menu",
+    "aria-labelledby": "channelsDropdown"
+  }, channels === null || channels === void 0 ? void 0 : channels.map(function (channel) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+      className: "dropdown-item",
+      key: channel.id,
+      to: "/threads?channel=" + channel.slug
+    }, channel.name);
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "navbar-nav ml-auto"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Authentication__WEBPACK_IMPORTED_MODULE_2__["default"], {
     user: authUser
@@ -94241,14 +94265,19 @@ function LogedInLinks() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    className: "nav-link",
+    className: "navbar-brand",
+    to: "/threads/create"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "h5"
+  }, "+New")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "navbar-brand",
     to: "/profile"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
   }, user === null || user === void 0 ? void 0 : user.name))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    className: "nav-link",
+    className: "navbar-brand",
     to: "",
     onClick: function onClick() {
       return logout();
@@ -94281,14 +94310,14 @@ function LogedOutLinks() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    className: "nav-link",
+    className: "navbar-brand",
     to: "/login"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
   }, "Login"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    className: "nav-link",
+    className: "navbar-brand",
     to: "/register"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
@@ -95348,16 +95377,29 @@ var Threads = /*#__PURE__*/function (_Component) {
     value: function componentWillMount() {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/threads").then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/threads" + this.props.location.search).then(function (response) {
         _this2.setState(_objectSpread(_objectSpread({}, _this2.state), {}, {
           threads: response.data
         }));
       });
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var _this3 = this;
+
+      if (this.props.location.search !== prevProps.location.search) {
+        axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/threads" + this.props.location.search).then(function (response) {
+          _this3.setState(_objectSpread(_objectSpread({}, _this3.state), {}, {
+            threads: response.data
+          }));
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var threads = this.state.threads;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -95367,7 +95409,7 @@ var Threads = /*#__PURE__*/function (_Component) {
       }, threads.length ? threads.map(function (thread) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_2__["default"], {
           thread: thread,
-          deleteThread: _this3.deleteThread,
+          deleteThread: _this4.deleteThread,
           key: thread.id
         });
       }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "There is no thread yet!")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -95484,8 +95526,8 @@ var Flash = function Flash() {
 };
 
 var style = {
-  bottom: '30px',
-  right: '30px'
+  bottom: '40px',
+  right: '40px'
 };
 
 if (document.getElementById("flash")) {

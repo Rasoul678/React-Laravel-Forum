@@ -39,8 +39,8 @@ const Flash = ()=>{
 }
 
 const style = {
-    bottom: '30px',
-    right: '30px'
+    bottom: '40px',
+    right: '40px'
 }
 
 if (document.getElementById("flash")) {

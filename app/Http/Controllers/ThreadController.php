@@ -13,7 +13,13 @@ class ThreadController extends Controller
     }
 
     public function index(){
-        return $threads = Thread::latest()->get();
+        if(request()->has('channel'))
+        {
+            $channel = Channel::whereSlug(request('channel'))->first();
+
+            return $channel->threads()->latest()->get();
+        }
+        return Thread::latest()->get();
     }
 
     public function store(){

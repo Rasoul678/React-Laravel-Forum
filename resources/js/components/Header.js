@@ -5,6 +5,7 @@ import Axios from "axios";
 
 function Header() {
     const [authUser, setAuthUser] = useState({});
+    const [channels, setChannels] = useState([]);
 
     useEffect(()=>{
         const token = localStorage.getItem('access_token');
@@ -14,6 +15,12 @@ function Header() {
                 setAuthUser(response.data);
             }).catch(error=>{
                 console.log(error);
+        });
+        Axios.get('/api/channels')
+            .then(response=>{
+                setChannels(response.data);
+            }).catch(error=>{
+            console.log(error);
         });
     }, [])
     return (
@@ -41,9 +48,9 @@ function Header() {
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item dropdown">
                             <a
-                                className="nav-link dropdown-toggle"
+                                className="navbar-brand dropdown-toggle"
                                 to="#"
-                                id="navbarDropdown"
+                                id="threadsDropdown"
                                 role="button"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
@@ -54,17 +61,40 @@ function Header() {
 
                             <div
                                 className="dropdown-menu"
-                                aria-labelledby="navbarDropdown"
+                                aria-labelledby="threadsDropdown"
                             >
                                 <Link className="dropdown-item" to="/threads">
                                     All Threads
                                 </Link>
                             </div>
                         </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/threads/create">
-                                <span className="h5">Add Thread</span>
-                            </Link>
+                        <li className="nav-item dropdown">
+                            <a
+                                className="navbar-brand dropdown-toggle"
+                                to="#"
+                                id="channelsDropdown"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                <span className='h5'>Channels</span>
+                            </a>
+
+                            <div
+                                className="dropdown-menu"
+                                aria-labelledby="channelsDropdown"
+                            >
+                                {
+                                    channels?.map(channel=>{
+                                        return (
+                                            <Link className="dropdown-item" key={channel.id} to={`/threads?channel=` + channel.slug}>
+                                                {channel.name}
+                                            </Link>
+                                        )
+                                    })
+                                }
+                            </div>
                         </li>
                     </ul>
                     <ul className='navbar-nav ml-auto'>

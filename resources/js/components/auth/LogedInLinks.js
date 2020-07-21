@@ -29,12 +29,15 @@ function LogedInLinks() {
     return (
         <Fragment>
             <li className="nav-item">
-                <Link className="nav-link" to='/profile'>
+                <Link className="navbar-brand" to="/threads/create">
+                    <span className="h5">+New</span>
+                </Link>
+                <Link className="navbar-brand" to='/profile'>
                     <span className="h5">{ user?.name }</span>
                 </Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link" to='' onClick={()=>logout()}>
+                <Link className="navbar-brand" to='' onClick={()=>logout()}>
                     <span className="h5">Logout</span>
                 </Link>
             </li>

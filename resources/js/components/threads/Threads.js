@@ -8,12 +8,25 @@ class Threads extends Component {
     };
 
     componentWillMount() {
-        Axios.get("/api/threads").then(response => {
+        Axios.get("/api/threads" + this.props.location.search)
+            .then(response => {
             this.setState({
                 ...this.state,
                 threads: response.data
             });
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location.search !== prevProps.location.search) {
+            Axios.get("/api/threads" + this.props.location.search)
+                .then(response => {
+                    this.setState({
+                        ...this.state,
+                        threads: response.data
+                    });
+                });
+        }
     }
 
     deleteThread = id => {
