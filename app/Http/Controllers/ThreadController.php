@@ -34,7 +34,7 @@ class ThreadController extends Controller
     }
 
     public function show(Channel $channel,Thread $thread){
-        return $thread = Thread::whereId($thread->id)->get();
+        return Thread::whereId($thread->id)->first();
     }
 
 

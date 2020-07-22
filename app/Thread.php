@@ -10,7 +10,7 @@ class Thread extends Model
 
     protected $with = ['creator', 'replies', 'channel'];
 
-    protected $appends = ['path'];
+    protected $appends = ['path', 'repliesCount'];
 
     public function creator()
     {
@@ -30,6 +30,11 @@ class Thread extends Model
     public function getPathAttribute()
     {
         return "/threads/" . $this->channel->slug . "/" . $this->id;
+    }
+
+    public function getRepliesCountAttribute()
+    {
+        return $this->replies()->count();
     }
 
     public function scopeFilter($query, $filters)

@@ -1,32 +1,36 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, {useEffect, useState, useRef} from "react";
+import {useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
+import Pluralize from 'pluralize';
 import Replies from '../replies/Replies';
 import AddReplyButton from "../replies/AddReplyButton";
 
 const ShowThread = () => {
-    const { channel, id } = useParams();
+    const {channel, id} = useParams();
 
     const [thread, setThread] = useState(null);
 
     const [newReply, setNewReply] = useState(null);
 
-    const deleteReply = (reply)=>{
+    const deleteReply = (reply) => {
         Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id)
-            .then(response=>{
+            .then(response => {
                 setThread(response.data);
                 flash("Your reply has been deleted.", "danger");
             })
             .catch();
     };
 
-    const addReply = (replyBody)=>{
-        Axios.post(`/api/threads/${thread.id}/replies`,{body: replyBody, auth_user_id: JSON.parse(localStorage.getItem('user')).id})
-            .then(response=>{
+    const addReply = (replyBody) => {
+        Axios.post(`/api/threads/${thread.id}/replies`, {
+            body: replyBody,
+            auth_user_id: JSON.parse(localStorage.getItem('user')).id
+        })
+            .then(response => {
                 setNewReply(response.data);
                 flash('Your reply has been created.', "success");
-            }).catch(error=>{
+            }).catch(error => {
             console.log(error.response.data.message);
         });
     }
@@ -34,7 +38,8 @@ const ShowThread = () => {
     useEffect(() => {
         Axios.get(`/api/threads/${channel}/${id}`)
             .then(response => {
-                setThread(response.data[0]);
+                console.log(response.data);
+                setThread(response.data);
             })
             .catch(error => {
                 console.log(error.response);
@@ -55,11 +60,11 @@ const ShowThread = () => {
                                             {thread.creator.name}
                                         </a>{" "}
                                         posted: {' '}
-                                        {moment(thread.created_at).fromNow()}
+                                        {thread.title}
                                     </h5>
                                 </div>
                                 <div className="card-footer">
-                                    <div className="card-text" dangerouslySetInnerHTML={{__html: thread.body}} />
+                                    <div className="card-text" dangerouslySetInnerHTML={{__html: thread.body}}/>
                                 </div>
                             </div>
                         </div>
@@ -68,9 +73,11 @@ const ShowThread = () => {
                     <div className="col-md-4">
                         <div className="card sticky-top">
                             <div className="card-body">
-                                <h3 className="card-title text-center">
-                                    Notifications
-                                </h3>
+                                <h5 className="card-title">
+                                    This thread was
+                                    published {moment(thread.created_at).fromNow()} by {thread.creator.name}, and
+                                    currently has {Pluralize('comment', thread.repliesCount, true)}.
+                                </h5>
                             </div>
                         </div>
                     </div>
