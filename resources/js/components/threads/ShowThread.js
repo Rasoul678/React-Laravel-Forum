@@ -3,8 +3,8 @@ import {useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 import Pluralize from 'pluralize';
-import Replies from '../replies/Replies';
 import AddReplyButton from "../replies/AddReplyButton";
+import RepliesPagination from "../replies/RepliesPagination";
 
 const ShowThread = () => {
     const {channel, id} = useParams();
@@ -68,7 +68,7 @@ const ShowThread = () => {
                                 </div>
                             </div>
                         </div>
-                        <Replies replies={thread.replies} delete={deleteReply}/>
+                        <RepliesPagination replies={thread.replies} delete={deleteReply}/>
                     </div>
                     <div className="col-md-4">
                         <div className="card sticky-top">

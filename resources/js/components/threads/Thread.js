@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
+import Pluralize from "pluralize";
 
 class Thread extends Component {
     render(){
@@ -14,19 +15,21 @@ class Thread extends Component {
                                 {thread.creator.name}
                             </Link>
                             <Link className='card-link text-dark h5' to={thread.path} >
-                                {thread.title}
+                                {thread.title} ( has {Pluralize('reply', thread.repliesCount, true)} )
                             </Link>
                         </div>
-                        {
-                            isAuthenticated && thread.user_id == JSON.parse(localStorage.getItem('user')).id &&
-                            <Link to='' className='h4 text-danger' onClick={(e)=>{
-                                e.preventDefault();
+                        <div>
+                            {
+                                isAuthenticated && thread.user_id == JSON.parse(localStorage.getItem('user')).id &&
+                                <Link to='' className='h4 text-danger' onClick={(e)=>{
+                                    e.preventDefault();
 
-                                deleteThread(thread.id);
-                            }}>
-                                <i className="fa fa-trash" aria-hidden="true"></i>
-                            </Link>
-                        }
+                                    deleteThread(thread.id);
+                                }}>
+                                    <i className="fa fa-trash" aria-hidden="true"></i>
+                                </Link>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className="card-body">

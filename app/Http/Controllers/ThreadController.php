@@ -15,7 +15,7 @@ class ThreadController extends Controller
 
     public function index(ThreadFilters $filters){
 
-        return Thread::filter($filters)->latest()->get();
+        return Thread::latest()->filter($filters)->get();
     }
 
     public function store(){

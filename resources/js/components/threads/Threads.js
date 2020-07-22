@@ -10,11 +10,14 @@ class Threads extends Component {
     componentWillMount() {
         Axios.get("/api/threads" + this.props.location.search)
             .then(response => {
-            this.setState({
-                ...this.state,
-                threads: response.data
+                this.setState({
+                    ...this.state,
+                    threads: response.data
+                });
+            })
+            .catch(error=>{
+                console.log(error);
             });
-        });
     }
 
     componentDidUpdate(prevProps) {
