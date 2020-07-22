@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadFilters;
 use App\Thread;
-use App\User;
 
 class ThreadController extends Controller
 {
@@ -13,8 +13,9 @@ class ThreadController extends Controller
         $this->middleware('auth:api')->except(['index', 'show']);
     }
 
-    public function index(){
-        return $this->getThreads();
+    public function index(ThreadFilters $filters){
+
+        return Thread::filter($filters)->latest()->get();
     }
 
     public function store(){
@@ -40,26 +41,5 @@ class ThreadController extends Controller
     public function destroy(Thread $thread){
         $thread->delete();
         return response()->json('Your Thread has been deleted.');
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getThreads()
-    {
-        if (request()->has('channel')) {
-            $channel = Channel::whereSlug(request('channel'))->first();
-
-            $threads = $channel->threads()->latest();
-        } else {
-            $threads = Thread::latest();
-        }
-
-        if (request()->has('by')) {
-            $user = User::whereName(request('by'))->firstOrFail();
-
-            $threads = $threads->where('user_id', $user->id);
-        }
-        return $threads->get();
     }
 }

@@ -9,11 +9,14 @@ class Thread extends Component {
             <div className="card shadow mb-3">
                 <div className="card-header">
                     <div className="d-flex justify-content-between">
-                        <h3 className="card-title">
-                            <Link className='card-link text-dark' to={thread.path} >
+                        <div className="card-title">
+                            <Link className='card-link h4' to='/profile'>
+                                {thread.creator.name}
+                            </Link>
+                            <Link className='card-link text-dark h5' to={thread.path} >
                                 {thread.title}
                             </Link>
-                        </h3>
+                        </div>
                         {
                             isAuthenticated && thread.user_id == JSON.parse(localStorage.getItem('user')).id &&
                             <Link to='' className='h4 text-danger' onClick={(e)=>{
