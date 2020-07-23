@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
@@ -55,7 +55,7 @@ const ShowThread = () => {
                             <div className="card-body">
                                 <div className="d-flex justify-content-between py-2">
                                     <h5 className="card-title align-self-center">
-                                        <a href="" className="card-link h4">
+                                        <a href={`/profiles/${thread.creator.name}`} className="card-link h4">
                                             {thread.creator.name}
                                         </a>{" "}
                                         posted: {' '}

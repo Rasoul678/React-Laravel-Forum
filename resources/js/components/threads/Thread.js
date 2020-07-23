@@ -11,7 +11,7 @@ class Thread extends Component {
                 <div className="card-header">
                     <div className="d-flex justify-content-between">
                         <div className="card-title">
-                            <Link className='card-link h4' to='/profile'>
+                            <Link className='card-link h4' to={`/profiles/${thread.creator.name}`}>
                                 {thread.creator.name}
                             </Link>
                             <Link className='card-link text-dark h5' to={thread.path} >

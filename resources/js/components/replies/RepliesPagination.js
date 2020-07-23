@@ -84,52 +84,55 @@ class RepliesPagination extends Component {
                         })
                     }
                 </div>
-                <ul id="page-numbers">
-                    <nav>
-                        <Pagination>
-                            <PaginationItem>
-                                {prev === 0 ? <PaginationLink disabled>First</PaginationLink> :
-                                    <PaginationLink onClick={this.handleFirstClick} id={prev}
-                                                    href={prev}>First</PaginationLink>
-                                }
-                            </PaginationItem>
-                            <PaginationItem>
-                                {prev === 0 ? <PaginationLink disabled>Prev</PaginationLink> :
-                                    <PaginationLink onClick={this.handleClick} id={prev}
-                                                    href={prev}>Prev</PaginationLink>
-                                }
-                            </PaginationItem>
-                            {
-                                pageNumbers.map((number, i) =>
-                                    <Pagination key={i}>
-                                        <PaginationItem
-                                            active={pageNumbers[currentPage - 1] === (number) ? true : false}>
-                                            <PaginationLink onClick={this.handleClick} href={number} key={number}
-                                                            id={number}>
-                                                {number}
-                                            </PaginationLink>
-                                        </PaginationItem>
-                                    </Pagination>
-                                )}
-
-                            <PaginationItem>
+                {
+                    !! replies.length &&
+                    <ul id="page-numbers">
+                        <nav>
+                            <Pagination>
+                                <PaginationItem>
+                                    {prev === 0 ? <PaginationLink disabled>First</PaginationLink> :
+                                        <PaginationLink onClick={this.handleFirstClick} id={prev}
+                                                        href={prev}>First</PaginationLink>
+                                    }
+                                </PaginationItem>
+                                <PaginationItem>
+                                    {prev === 0 ? <PaginationLink disabled>Prev</PaginationLink> :
+                                        <PaginationLink onClick={this.handleClick} id={prev}
+                                                        href={prev}>Prev</PaginationLink>
+                                    }
+                                </PaginationItem>
                                 {
-                                    currentPage === last ? <PaginationLink disabled>Next</PaginationLink> :
-                                        <PaginationLink onClick={this.handleClick} id={pageNumbers[currentPage]}
-                                                        href={pageNumbers[currentPage]}>Next</PaginationLink>
-                                }
-                            </PaginationItem>
+                                    pageNumbers.map((number, i) =>
+                                        <Pagination key={i}>
+                                            <PaginationItem
+                                                active={pageNumbers[currentPage - 1] === (number) ? true : false}>
+                                                <PaginationLink onClick={this.handleClick} href={number} key={number}
+                                                                id={number}>
+                                                    {number}
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        </Pagination>
+                                    )}
 
-                            <PaginationItem>
-                                {
-                                    currentPage === last ? <PaginationLink disabled>Last</PaginationLink> :
-                                        <PaginationLink onClick={this.handleLastClick} id={pageNumbers[currentPage]}
-                                                        href={pageNumbers[currentPage]}>Last</PaginationLink>
-                                }
-                            </PaginationItem>
-                        </Pagination>
-                    </nav>
-                </ul>
+                                <PaginationItem>
+                                    {
+                                        currentPage === last ? <PaginationLink disabled>Next</PaginationLink> :
+                                            <PaginationLink onClick={this.handleClick} id={pageNumbers[currentPage]}
+                                                            href={pageNumbers[currentPage]}>Next</PaginationLink>
+                                    }
+                                </PaginationItem>
+
+                                <PaginationItem>
+                                    {
+                                        currentPage === last ? <PaginationLink disabled>Last</PaginationLink> :
+                                            <PaginationLink onClick={this.handleLastClick} id={pageNumbers[currentPage]}
+                                                            href={pageNumbers[currentPage]}>Last</PaginationLink>
+                                    }
+                                </PaginationItem>
+                            </Pagination>
+                        </nav>
+                    </ul>
+                }
             </div>
         );
     }

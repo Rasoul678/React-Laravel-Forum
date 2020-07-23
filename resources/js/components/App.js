@@ -7,6 +7,7 @@ import ShowThread from "./threads/ShowThread";
 import  Home from './Home';
 import LoginPage from './auth/LoginPage';
 import RegisterPage from "./auth/RegisterPage";
+import Profile from "./Profile";
 
 class App extends Component {
     render() {
@@ -21,6 +22,7 @@ class App extends Component {
                         <Route exact path="/threads/:channel/:id" component={ShowThread} />
                         <Route exact path='/login' component={LoginPage} />
                         <Route exact path='/register' component={RegisterPage} />
+                        <Route exact path='/profiles/:username' component={Profile} />
                     </Switch>
                 </div>
             </Router>

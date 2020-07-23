@@ -88,7 +88,7 @@ const Reply = (props) =>{
                             <div className="card-title">
                                 <div className="my-3 d-flex justify-content-between">
                                     <div>
-                                        <Link className="card-link" to="#/profile">
+                                        <Link className="card-link" to={`/profiles/${ reply.owner.name}`}>
                                             <span className="h4">{ reply.owner.name}</span>
                                         </Link>
                                         {" "}
