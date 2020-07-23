@@ -13,7 +13,7 @@ const AddReplyButton = (props) => {
                 type="button"
                 className='btn btn-lg btn-primary rounded-circle position-fixed'
                 style={style.button}
-                title={isAuthenticated ? 'Leave a Reply' : 'Login and Reply.'}
+                title={isAuthenticated ? 'Leave a Reply' : 'Login and Leave a Reply.'}
                 disabled={!isAuthenticated}
                 data-toggle="modal"
                 data-target="#addReplyModal"

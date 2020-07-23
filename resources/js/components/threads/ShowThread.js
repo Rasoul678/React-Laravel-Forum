@@ -38,7 +38,6 @@ const ShowThread = () => {
     useEffect(() => {
         Axios.get(`/api/threads/${channel}/${id}`)
             .then(response => {
-                console.log(response.data);
                 setThread(response.data);
             })
             .catch(error => {

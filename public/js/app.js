@@ -108325,7 +108325,7 @@ var AddReplyButton = function AddReplyButton(props) {
     type: "button",
     className: "btn btn-lg btn-primary rounded-circle position-fixed",
     style: style.button,
-    title: isAuthenticated ? 'Leave a Reply' : 'Login and Reply.',
+    title: isAuthenticated ? 'Leave a Reply' : 'Login and Leave a Reply.',
     disabled: !isAuthenticated,
     "data-toggle": "modal",
     "data-target": "#addReplyModal"
@@ -108609,24 +108609,94 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var Reply = function Reply(props) {
   var reply = props.reply;
-  var isAuthenticated = Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["useSelector"])(function (state) {
-    return state.authReducer.isAuthenticated;
-  });
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
-      editing = _useState2[0],
-      setEditing = _useState2[1];
+      authUser = _useState2[0],
+      setAuthUser = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      update = _useState4[0],
-      setUpdate = _useState4[1];
+      editing = _useState4[0],
+      setEditing = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(reply.favoritesCount),
       _useState6 = _slicedToArray(_useState5, 2),
-      body = _useState6[0],
-      setBody = _useState6[1];
+      favoritesCount = _useState6[0],
+      setFavoritesCount = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isFavorited = _useState8[0],
+      setIsFavorited = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState10 = _slicedToArray(_useState9, 2),
+      update = _useState10[0],
+      setUpdate = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState12 = _slicedToArray(_useState11, 2),
+      body = _useState12[0],
+      setBody = _useState12[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/user', {
+      headers: headers
+    }).then(function (response) {
+      setAuthUser(response.data);
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/replies/".concat(reply.id, "/favorites/favorited"), {
+        authUserId: response.data.id
+      }, {
+        headers: headers
+      }).then(function (response) {
+        setIsFavorited(!!response.data);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    })["catch"](function (error) {
+      setAuthUser(false);
+      console.log(error);
+    });
+  }, [update]);
+
+  var updateReply = function updateReply() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
+      body: body
+    }).then(function (response) {
+      setEditing(false);
+      setUpdate(response.data);
+      flash('Your reply has been updated.', "success");
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var toggleFavorite = function toggleFavorite(e) {
+    e.preventDefault();
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    var data = {
+      userId: authUser.id
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: isFavorited ? 'delete' : 'post',
+      url: "/api/replies/".concat(reply.id, "/favorites"),
+      data: data,
+      headers: headers
+    }).then(function (response) {
+      setFavoritesCount(response.data.favoritesCount);
+      setIsFavorited(!isFavorited);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card my-3"
@@ -108643,28 +108713,29 @@ var Reply = function Reply(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-sm btn-primary mt-2",
     onClick: function onClick() {
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
-        body: body
-      }).then(function (response) {
-        setEditing(false);
-        setUpdate(response.data);
-        flash('Your reply has been updated.', "success");
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      return updateReply();
     }
   }, "Update")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("blockquote", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-title"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "my-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "my-3 d-flex justify-content-between"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link",
     to: "#/profile"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h4"
   }, reply.owner.name)), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
-  }, "said: ", moment__WEBPACK_IMPORTED_MODULE_5___default()(reply.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), update ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "said: ", moment__WEBPACK_IMPORTED_MODULE_5___default()(reply.created_at).fromNow())), authUser && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "#",
+    className: "h4",
+    onClick: function onClick(e) {
+      return toggleFavorite(e);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-heart ".concat(isFavorited ? 'text-danger' : 'text-secondary'),
+    "aria-hidden": "true"
+  }, " ", favoritesCount)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), update ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     dangerouslySetInnerHTML: {
       __html: update.body
     }
@@ -108672,7 +108743,7 @@ var Reply = function Reply(props) {
     dangerouslySetInnerHTML: {
       __html: reply.body
     }
-  })))), isAuthenticated && reply.user_id == JSON.parse(localStorage.getItem('user')).id && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })))), authUser && reply.user_id == authUser.id && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
@@ -108690,7 +108761,7 @@ var Reply = function Reply(props) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-sm btn-danger",
     onClick: function onClick() {
-      props["delete"](reply);
+      return props["delete"](reply);
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash",
@@ -108959,7 +109030,6 @@ var ShowThread = function ShowThread() {
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
-      console.log(response.data);
       setThread(response.data);
     })["catch"](function (error) {
       console.log(error.response);

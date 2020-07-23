@@ -40,3 +40,9 @@ Route::patch('/threads/{thread}/replies/{reply}', 'ReplyController@update');
 Route::get('/threads/{thread}/replies', 'ReplyController@index');
 
 Route::get('/channels', 'ChannelController@index');
+
+Route::post('replies/{reply}/favorites', 'FavoriteController@store');
+
+Route::delete('replies/{reply}/favorites', 'FavoriteController@destroy');
+
+Route::post('replies/{reply}/favorites/favorited', 'FavoriteController@check');
