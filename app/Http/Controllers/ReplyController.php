@@ -23,7 +23,7 @@ class ReplyController extends Controller
 
         $reply = Reply::create($attributes);
 
-        return response()->json($reply);
+        return response()->json($reply->thread);
     }
 
     public function update(Thread $thread, Reply $reply)

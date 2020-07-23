@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 import Pluralize from 'pluralize';
 import AddReplyButton from "../replies/AddReplyButton";
 import RepliesPagination from "../replies/RepliesPagination";
 
-const ShowThread = () => {
+const ShowThread = (props) => {
     const {channel, id} = useParams();
 
     const [thread, setThread] = useState(null);
-
-    const [newReply, setNewReply] = useState(null);
 
     const deleteReply = (reply) => {
         Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id)
@@ -28,7 +26,7 @@ const ShowThread = () => {
             auth_user_id: JSON.parse(localStorage.getItem('user')).id
         })
             .then(response => {
-                setNewReply(response.data);
+                setThread(response.data);
                 flash('Your reply has been created.', "success");
             }).catch(error => {
             console.log(error.response.data.message);
@@ -43,7 +41,20 @@ const ShowThread = () => {
             .catch(error => {
                 console.log(error.response);
             });
-    }, [newReply]);
+    }, []);
+
+    const deleteThread = (id) => {
+        const token = localStorage.getItem('access_token');
+        const headers = {Authorization: `Bearer ${token}`};
+        Axios.delete("/api/threads/" + id, {headers})
+            .then(response => {
+                props.history.push('/threads');
+                flash(response.data, "danger");
+            })
+            .catch(error=>{
+                console.log(error);
+            });
+    };
 
     return (
         <div>
@@ -61,6 +72,15 @@ const ShowThread = () => {
                                         posted: {' '}
                                         {thread.title}
                                     </h5>
+                                    {
+                                        thread.user_id === JSON.parse(localStorage.getItem('user'))?.id &&
+                                        <Link to='#' className='h4 text-danger' onClick={(e)=>{
+                                            e.preventDefault();
+                                            deleteThread(thread.id);
+                                        }}>
+                                            <i className="fa fa-trash" aria-hidden="true"></i>
+                                        </Link>
+                                    }
                                 </div>
                                 <div className="card-footer">
                                     <div className="card-text" dangerouslySetInnerHTML={{__html: thread.body}}/>
@@ -74,8 +94,11 @@ const ShowThread = () => {
                             <div className="card-body">
                                 <h5 className="card-title">
                                     This thread was
-                                    published {moment(thread.created_at).fromNow()} by {thread.creator.name}, and
-                                    currently has {Pluralize('comment', thread.repliesCount, true)}.
+                                    published {moment(thread.created_at).fromNow()} by
+                                    <Link className='card-link' to={`/profiles/${thread.creator.name}`}>
+                                        {" " + thread.creator.name}
+                                    </Link>
+                                    , and currently has {Pluralize('comment', thread.repliesCount, true)}.
                                 </h5>
                             </div>
                         </div>

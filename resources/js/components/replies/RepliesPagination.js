@@ -85,7 +85,7 @@ class RepliesPagination extends Component {
                     }
                 </div>
                 {
-                    !! replies.length &&
+                    replies.length > repliesPerPage &&
                     <ul id="page-numbers">
                         <nav>
                             <Pagination>

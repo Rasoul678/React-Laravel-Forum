@@ -6,7 +6,7 @@ import {useDispatch} from "react-redux";
 
 
 
-function LogedInLinks() {
+const LogedInLinks = () => {
     const dispatch = useDispatch();
 
     const user = JSON.parse(localStorage.getItem("user"));

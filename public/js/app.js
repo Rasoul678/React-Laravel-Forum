@@ -107848,7 +107848,10 @@ var Profile = function Profile(props) {
       className: "card-footer d-flex justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "h4"
-    }, "Title : ", thread.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    }, "Title : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+      className: "card-link",
+      to: thread.path
+    }, thread.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "h6"
     }, "Posted: ", moment__WEBPACK_IMPORTED_MODULE_2___default()(thread.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card-body",
@@ -108003,7 +108006,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function LogedInLinks() {
+var LogedInLinks = function LogedInLinks() {
   var dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["useDispatch"])();
   var user = JSON.parse(localStorage.getItem("user"));
 
@@ -108050,7 +108053,7 @@ function LogedInLinks() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
   }, "Logout"))));
-}
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router__WEBPACK_IMPORTED_MODULE_3__["withRouter"])(LogedInLinks));
 
@@ -108615,7 +108618,7 @@ var RepliesPagination = /*#__PURE__*/function (_Component) {
           "delete": _this2.props["delete"],
           key: reply.id
         });
-      })), !!replies.length && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+      })), replies.length > repliesPerPage && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         id: "page-numbers"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Pagination"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], null, prev === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
         disabled: true
@@ -109087,7 +109090,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var ShowThread = function ShowThread() {
+var ShowThread = function ShowThread(props) {
+  var _JSON$parse;
+
   var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
       channel = _useParams.channel,
       id = _useParams.id;
@@ -109096,11 +109101,6 @@ var ShowThread = function ShowThread() {
       _useState2 = _slicedToArray(_useState, 2),
       thread = _useState2[0],
       setThread = _useState2[1];
-
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState4 = _slicedToArray(_useState3, 2),
-      newReply = _useState4[0],
-      setNewReply = _useState4[1];
 
   var deleteReply = function deleteReply(reply) {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id).then(function (response) {
@@ -109114,7 +109114,7 @@ var ShowThread = function ShowThread() {
       body: replyBody,
       auth_user_id: JSON.parse(localStorage.getItem('user')).id
     }).then(function (response) {
-      setNewReply(response.data);
+      setThread(response.data);
       flash('Your reply has been created.', "success");
     })["catch"](function (error) {
       console.log(error.response.data.message);
@@ -109127,7 +109127,23 @@ var ShowThread = function ShowThread() {
     })["catch"](function (error) {
       console.log(error.response);
     });
-  }, [newReply]);
+  }, []);
+
+  var deleteThread = function deleteThread(id) {
+    var token = localStorage.getItem('access_token');
+    var headers = {
+      Authorization: "Bearer ".concat(token)
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/api/threads/" + id, {
+      headers: headers
+    }).then(function (response) {
+      props.history.push('/threads');
+      flash(response.data, "danger");
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, thread ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -109145,7 +109161,17 @@ var ShowThread = function ShowThread() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/profiles/".concat(thread.creator.name),
     className: "card-link h4"
-  }, thread.creator.name), " ", "posted: ", ' ', thread.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, thread.creator.name), " ", "posted: ", ' ', thread.title), thread.user_id === ((_JSON$parse = JSON.parse(localStorage.getItem('user'))) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.id) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "#",
+    className: "h4 text-danger",
+    onClick: function onClick(e) {
+      e.preventDefault();
+      deleteThread(thread.id);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-trash",
+    "aria-hidden": "true"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-text",
@@ -109163,7 +109189,10 @@ var ShowThread = function ShowThread() {
     className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
     className: "card-title"
-  }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by ", thread.creator.name, ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.repliesCount, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Loading..."));
+  }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "card-link",
+    to: "/profiles/".concat(thread.creator.name)
+  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.repliesCount, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Loading..."));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ShowThread);
@@ -109182,99 +109211,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var pluralize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! pluralize */ "./node_modules/pluralize/pluralize.js");
-/* harmony import */ var pluralize__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pluralize__WEBPACK_IMPORTED_MODULE_3__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+/* harmony import */ var pluralize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pluralize */ "./node_modules/pluralize/pluralize.js");
+/* harmony import */ var pluralize__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pluralize__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
 
-
-
-var Thread = /*#__PURE__*/function (_Component) {
-  _inherits(Thread, _Component);
-
-  var _super = _createSuper(Thread);
-
-  function Thread() {
-    _classCallCheck(this, Thread);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(Thread, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          thread = _this$props.thread,
-          deleteThread = _this$props.deleteThread,
-          isAuthenticated = _this$props.isAuthenticated;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card shadow mb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-header"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "d-flex justify-content-between"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-title"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        className: "card-link h4",
-        to: "/profiles/".concat(thread.creator.name)
-      }, thread.creator.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        className: "card-link text-dark h5",
-        to: thread.path
-      }, thread.title, " ( has ", pluralize__WEBPACK_IMPORTED_MODULE_3___default()('reply', thread.repliesCount, true), " )")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isAuthenticated && thread.user_id == JSON.parse(localStorage.getItem('user')).id && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        to: "",
-        className: "h4 text-danger",
-        onClick: function onClick(e) {
-          e.preventDefault();
-          deleteThread(thread.id);
-        }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "fa fa-trash",
-        "aria-hidden": "true"
-      }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-body"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-text",
-        dangerouslySetInnerHTML: {
-          __html: thread.body
-        }
-      })));
+var Thread = function Thread(props) {
+  var thread = props.thread;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card shadow mb-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-header"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "d-flex justify-content-between"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-title"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "card-link h4",
+    to: "/profiles/".concat(thread.creator.name)
+  }, thread.creator.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "card-link text-dark h5",
+    to: thread.path
+  }, thread.title, " ( has ", pluralize__WEBPACK_IMPORTED_MODULE_2___default()('reply', thread.repliesCount, true), " )")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-text",
+    dangerouslySetInnerHTML: {
+      __html: thread.body
     }
-  }]);
-
-  return Thread;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    isAuthenticated: state.authReducer.isAuthenticated
-  };
+  })));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps)(Thread));
+/* harmony default export */ __webpack_exports__["default"] = (Thread);
 
 /***/ }),
 
@@ -109344,26 +109313,6 @@ var Threads = /*#__PURE__*/function (_Component) {
       threads: []
     });
 
-    _defineProperty(_assertThisInitialized(_this), "deleteThread", function (id) {
-      var token = localStorage.getItem('access_token');
-      var headers = {
-        Authorization: "Bearer ".concat(token)
-      };
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("api/threads/" + id, {
-        headers: headers
-      }).then(function (response) {
-        console.log(response.data);
-
-        _this.setState(_objectSpread(_objectSpread({}, _this.state), {}, {
-          threads: _this.state.threads.filter(function (thread) {
-            return thread.id !== id;
-          })
-        }));
-
-        flash("Your thread has been deleted", "danger");
-      });
-    });
-
     return _this;
   }
 
@@ -109396,8 +109345,6 @@ var Threads = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-
       var threads = this.state.threads;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "row my-4"
@@ -109406,7 +109353,6 @@ var Threads = /*#__PURE__*/function (_Component) {
       }, threads.length ? threads.map(function (thread) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_2__["default"], {
           thread: thread,
-          deleteThread: _this4.deleteThread,
           key: thread.id
         });
       }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "There is no thread yet!")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

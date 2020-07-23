@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import moment from "moment";
 import Axios from 'axios';
 
@@ -32,7 +32,7 @@ const Profile = (props) => {
                         return (
                             <div className="card shadow mt-2" key={thread.id}>
                                 <div className="card-footer d-flex justify-content-between">
-                                    <span className='h4'>Title : {thread.title}</span>
+                                    <span className='h4'>Title : <Link className="card-link" to={thread.path}>{thread.title}</Link></span>
                                     <span className='h6'>Posted: {moment(thread.created_at).fromNow()}</span>
                                 </div>
                                 <div className="card-body" dangerouslySetInnerHTML={{__html: thread.body}}/>
