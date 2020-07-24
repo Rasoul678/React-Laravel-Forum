@@ -29,6 +29,8 @@ Route::post('/threads', 'ThreadController@store');
 
 Route::get('/threads/{channel:slug}/{thread}', 'ThreadController@show');
 
+Route::patch('/threads/{channel:slug}/{thread}', 'ThreadController@update');
+
 Route::delete('/threads/{thread}', 'ThreadController@destroy');
 
 Route::post('/threads/{thread}/replies', 'ReplyController@store');

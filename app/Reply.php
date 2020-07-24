@@ -15,11 +15,11 @@ class Reply extends Model
 
     protected $appends = ['favoritesCount'];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
+        parent::booted();
 
-        Reply::deleting(function ($reply) {
+        static::deleting(function ($reply) {
                 $reply->favorites()->delete();
         });
     }

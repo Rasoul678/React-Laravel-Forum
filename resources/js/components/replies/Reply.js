@@ -20,9 +20,10 @@ const Reply = (props) =>{
 
     const [body, setBody] = useState('');
 
+    const token = localStorage.getItem('access_token');
+    const headers = {Authorization: `Bearer ${token}`};
+
     useEffect(()=>{
-        const token = localStorage.getItem('access_token');
-        const headers = {Authorization: `Bearer ${token}`};
         Axios.get('/api/auth/user', { headers })
             .then(response=>{
                 setAuthUser(response.data);
@@ -40,7 +41,13 @@ const Reply = (props) =>{
     }, [update])
 
     const updateReply = () =>{
-        Axios.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {body: body})
+        const data = {body};
+        Axios({
+            method: 'patch',
+            url: `/api/threads/${reply.thread_id}/replies/${reply.id}`,
+            data,
+            headers
+        })
         .then(response=>{
             setEditing(false);
             setUpdate(response.data)

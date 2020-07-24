@@ -7,6 +7,11 @@ use App\Reply;
 
 class ReplyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index']);
+    }
+
     public function index(Thread $thread)
     {
         return $thread->replies;

@@ -108736,11 +108736,11 @@ var Reply = function Reply(props) {
       body = _useState12[0],
       setBody = _useState12[1];
 
+  var token = localStorage.getItem('access_token');
+  var headers = {
+    Authorization: "Bearer ".concat(token)
+  };
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    var token = localStorage.getItem('access_token');
-    var headers = {
-      Authorization: "Bearer ".concat(token)
-    };
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/user', {
       headers: headers
     }).then(function (response) {
@@ -108761,8 +108761,14 @@ var Reply = function Reply(props) {
   }, [update]);
 
   var updateReply = function updateReply() {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.patch('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
+    var data = {
       body: body
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: 'patch',
+      url: "/api/threads/".concat(reply.thread_id, "/replies/").concat(reply.id),
+      data: data,
+      headers: headers
     }).then(function (response) {
       setEditing(false);
       setUpdate(response.data);
@@ -108932,11 +108938,6 @@ function CreateThread(props) {
       channels = _useState8[0],
       setChannels = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState10 = _slicedToArray(_useState9, 2),
-      errors = _useState10[0],
-      setErrors = _useState10[1];
-
   var user = JSON.parse(localStorage.getItem('user'));
   var formData = {
     title: title,
@@ -108978,8 +108979,6 @@ function CreateThread(props) {
         flash(errors.title[0], "danger");
       } else if (errors.body) {
         flash(errors.body[0], "danger");
-      } else {
-        return;
       }
     });
   };
@@ -109070,6 +109069,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pluralize__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pluralize__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../replies/AddReplyButton */ "./resources/js/components/replies/AddReplyButton.js");
 /* harmony import */ var _replies_RepliesPagination__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../replies/RepliesPagination */ "./resources/js/components/replies/RepliesPagination.js");
+/* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -109081,6 +109081,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -109102,17 +109103,41 @@ var ShowThread = function ShowThread(props) {
       thread = _useState2[0],
       setThread = _useState2[1];
 
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      editing = _useState4[0],
+      setEditing = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      body = _useState6[0],
+      setBody = _useState6[1];
+
+  var inputTitle = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('');
+  var token = localStorage.getItem('access_token');
+  var headers = {
+    Authorization: "Bearer ".concat(token)
+  };
+
   var deleteReply = function deleteReply(reply) {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
+      headers: headers
+    }).then(function (response) {
       setThread(response.data);
       flash("Your reply has been deleted.", "danger");
     })["catch"]();
   };
 
   var addReply = function addReply(replyBody) {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/threads/".concat(thread.id, "/replies"), {
+    var data = {
       body: replyBody,
       auth_user_id: JSON.parse(localStorage.getItem('user')).id
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: 'post',
+      url: "/api/threads/".concat(thread.id, "/replies"),
+      data: data,
+      headers: headers
     }).then(function (response) {
       setThread(response.data);
       flash('Your reply has been created.', "success");
@@ -109121,19 +109146,26 @@ var ShowThread = function ShowThread(props) {
     });
   };
 
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
+  var updateThread = function updateThread() {
+    var data = {
+      title: inputTitle.current.value || thread.title,
+      body: body || thread.body
+    };
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: 'patch',
+      url: "/api/threads/".concat(channel, "/").concat(id),
+      data: data,
+      headers: headers
+    }).then(function (response) {
+      setEditing(false);
       setThread(response.data);
+      flash('Your thread has been updated.', "success");
     })["catch"](function (error) {
-      console.log(error.response);
+      console.log(error);
     });
-  }, []);
+  };
 
   var deleteThread = function deleteThread(id) {
-    var token = localStorage.getItem('access_token');
-    var headers = {
-      Authorization: "Bearer ".concat(token)
-    };
     axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/api/threads/" + id, {
       headers: headers
     }).then(function (response) {
@@ -109144,6 +109176,13 @@ var ShowThread = function ShowThread(props) {
     });
   };
 
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
+      setThread(response.data);
+    })["catch"](function (error) {
+      console.log(error.response);
+    });
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, thread ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -109155,25 +109194,67 @@ var ShowThread = function ShowThread(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "d-flex justify-content-between py-2"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
-    className: "card-title align-self-center"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    className: "".concat(editing ? '' : "d-flex justify-content-between", " py-2")
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-title align-self-center h5"
+  }, editing ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "title"
+  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "title",
+    defaultValue: thread.title,
+    ref: inputTitle
+  }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/profiles/".concat(thread.creator.name),
     className: "card-link h4"
-  }, thread.creator.name), " ", "posted: ", ' ', thread.title), thread.user_id === ((_JSON$parse = JSON.parse(localStorage.getItem('user'))) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.id) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, thread.creator.name), " ", "posted: ", ' ', thread.title)), thread.user_id === ((_JSON$parse = JSON.parse(localStorage.getItem('user'))) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.id) && !editing && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "#",
-    className: "h4 text-danger",
+    title: "Edit Thread",
+    className: "h2",
+    onClick: function onClick() {
+      return setEditing(!editing);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-pencil-square-o text-primary",
+    "aria-hidden": "true"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-footer"
+  }, editing ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Wysiwyg__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    trixId: thread.id,
+    defaultValue: thread.body,
+    onChange: function onChange(content) {
+      return setBody(content);
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "mt-2 d-flex justify-content-between"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    title: "Cancel",
+    className: "btn btn-sm btn-warning mr-2",
+    onClick: function onClick() {
+      return setEditing(!editing);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-chevron-left",
+    "aria-hidden": "true"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    title: "Update Thread",
+    className: "btn btn-sm btn-primary mr-2",
+    onClick: function onClick() {
+      return updateThread();
+    }
+  }, "Update")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    title: "Delete Thread",
+    className: "btn btn-sm btn-danger",
     onClick: function onClick(e) {
-      e.preventDefault();
-      deleteThread(thread.id);
+      return deleteThread(thread.id);
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash",
     "aria-hidden": "true"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card-footer"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-text",
     dangerouslySetInnerHTML: {
       __html: thread.body

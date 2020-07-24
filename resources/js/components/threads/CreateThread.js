@@ -15,7 +15,7 @@ function CreateThread(props) {
     const [body, setBody] = useState("");
     const [channel, setChannel] = useState('');
     const [channels, setChannels] = useState([]);
-    const [errors, setErrors] = useState(false);
+
     const user = JSON.parse(localStorage.getItem('user'));
 
     const formData = { title, body, user_id: user?.id, channel_id:  channel};
@@ -54,8 +54,6 @@ function CreateThread(props) {
                     flash(errors.title[0], "danger");
                 }else if(errors.body){
                     flash(errors.body[0], "danger");
-                }else{
-                    return;
                 }
             });
     }

@@ -12,6 +12,19 @@ class Thread extends Model
 
     protected $appends = ['path', 'repliesCount'];
 
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::deleting(function ($thread) {
+            foreach ($thread->replies as $reply)
+            {
+                $reply->favorites()->delete();
+            }
+            $thread->replies()->delete();
+        });
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');

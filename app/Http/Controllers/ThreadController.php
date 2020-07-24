@@ -37,6 +37,16 @@ class ThreadController extends Controller
         return Thread::whereId($thread->id)->first();
     }
 
+    public function update(Channel $channel,Thread $thread)
+    {
+        $thread->update([
+            'title'=>request('title'),
+            'body'=>request('body'),
+        ]);
+
+        return response()->json($thread->fresh());
+    }
+
 
     public function destroy(Thread $thread){
         $thread->delete();
