@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, Fragment} from "react";
+import React, {useState, useRef, Fragment} from "react";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
@@ -6,11 +6,11 @@ import Pluralize from 'pluralize';
 import AddReplyButton from "../replies/AddReplyButton";
 import RepliesPagination from "../replies/RepliesPagination";
 import Wysiwyg from "../Wysiwyg";
+import {queryCache, useMutation, useQuery} from "react-query";
 
 const ShowThread = (props) => {
     const {channel, id} = useParams();
 
-    const [thread, setThread] = useState(null);
     const [editing, setEditing] = useState(false);
     const [body, setBody] = useState('');
 
@@ -19,39 +19,12 @@ const ShowThread = (props) => {
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
 
-    const deleteReply = (reply) => {
-        Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {headers})
-            .then(response => {
-                setThread(response.data);
-                flash("Your reply has been deleted.", "danger");
-            })
-            .catch();
-    };
+    const {isLoading, data: thread} = useQuery('thread', () =>
+        Axios.get(`/api/threads/${channel}/${id}`)
+            .then(response => response.data)
+    )
 
-    const addReply = (replyBody) => {
-        const data = {
-            body: replyBody,
-            auth_user_id: JSON.parse(localStorage.getItem('user')).id
-        };
-        Axios({
-                method: 'post',
-                url: `/api/threads/${thread.id}/replies`,
-                data,
-                headers
-            })
-            .then(response => {
-                setThread(response.data);
-                flash('Your reply has been created.', "success");
-            }).catch(error => {
-            console.log(error.response.data.message);
-        });
-    }
-
-    const updateThread = () =>{
-        const data = {
-            title: inputTitle.current.value || thread.title,
-            body: body || thread.body
-        };
+    const updateThread = (data) =>{
         Axios({
             method: 'patch',
             url: `/api/threads/${channel}/${id}`,
@@ -60,13 +33,16 @@ const ShowThread = (props) => {
         })
             .then(response=>{
                 setEditing(false);
-                setThread(response.data)
                 flash('Your thread has been updated.', "success");
+                return response;
             })
-            .catch(error=>{
-                console.log(error);
-            });
     }
+
+    const [update] = useMutation(updateThread, {
+        onSuccess: () => {
+            queryCache.invalidateQueries('thread')
+        },
+    })
 
     const deleteThread = (id) => {
         Axios.delete("/api/threads/" + id, {headers})
@@ -79,21 +55,11 @@ const ShowThread = (props) => {
             });
     };
 
-    useEffect(() => {
-        Axios.get(`/api/threads/${channel}/${id}`)
-            .then(response => {
-                setThread(response.data);
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
-    }, []);
-
     return (
         <div>
-            {thread ? (
+            {!isLoading ? (
                 <div className="row mt-5">
-                    <AddReplyButton add={addReply}/>
+                    <AddReplyButton thread={thread}/>
                     <div className="col-md-8">
                         <div className="card shadow sticky-top mb-5">
                             <div className="card-body">
@@ -151,7 +117,10 @@ const ShowThread = (props) => {
                                                             <button
                                                                 title="Update Thread"
                                                                 className="btn btn-sm btn-primary mr-2"
-                                                                onClick={()=>updateThread()}>
+                                                                onClick={()=>update({
+                                                                    title: inputTitle.current.value || thread.title,
+                                                                    body: body || thread.body
+                                                                })}>
                                                                 Update
                                                             </button>
                                                         </div>
@@ -170,7 +139,7 @@ const ShowThread = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <RepliesPagination replies={thread.replies} delete={deleteReply}/>
+                        <RepliesPagination replies={thread.replies}/>
                     </div>
                     <div className="col-md-4">
                         <div className="card sticky-top">
@@ -188,7 +157,10 @@ const ShowThread = (props) => {
                     </div>
                 </div>
             ) : (
-                <h1>Loading...</h1>
+                <div className="text-center mt-5">
+                    <i className="fa fa-cog fa-spin fa-5x fa-fw text-primary"></i>
+                    <span className="sr-only">Loading...</span>
+                </div>
             )}
         </div>
     );

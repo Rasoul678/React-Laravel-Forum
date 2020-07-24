@@ -79,7 +79,7 @@ class RepliesPagination extends Component {
                     {
                         currentReplies?.map(reply=>{
                             return (
-                                <Reply reply={reply} delete={this.props.delete} key={reply.id}/>
+                                <Reply reply={reply} key={reply.id}/>
                             )
                         })
                     }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
 import Axios from 'axios';
-import {useSelector} from "react-redux";
 import Wysiwyg from "../Wysiwyg";
 import moment from "moment";
+import {queryCache, useMutation} from "react-query";
 
 const Reply = (props) =>{
     const {reply } = props;
@@ -22,6 +22,20 @@ const Reply = (props) =>{
 
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
+
+    const deleteReply = (reply) => {
+        Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {headers})
+            .then(response => {
+                flash("Your reply has been deleted.", "danger");
+                return response;
+            })
+    };
+
+    const [destroy] = useMutation(deleteReply, {
+        onSuccess: () => {
+            queryCache.invalidateQueries('thread')
+        },
+    })
 
     useEffect(()=>{
         Axios.get('/api/auth/user', { headers })
@@ -138,7 +152,7 @@ const Reply = (props) =>{
                         </button>
                         <button
                             className='btn btn-sm btn-danger'
-                            onClick={()=>props.delete(reply)}
+                            onClick={()=>destroy(reply)}
                         >
                             <i className="fa fa-trash" aria-hidden="true"></i>
                         </button>

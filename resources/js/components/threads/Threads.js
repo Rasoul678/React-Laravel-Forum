@@ -5,7 +5,7 @@ import Thread from "./Thread";
 
 const Threads = (props) => {
 
-    const {isLoading, data} = useQuery('threads', () =>
+    const {isLoading, data: threads} = useQuery('threads', () =>
         Axios.get("/api/threads" + props.location.search)
             .then(response => {
                 return response.data;
@@ -16,10 +16,13 @@ const Threads = (props) => {
             <div className="row my-4">
                 <div className="col-md-8">
                     {isLoading ? (
-                        <h1 className="text-center">Loading ......</h1>
+                        <div className="text-center mt-5">
+                            <i className="fa fa-cog fa-spin fa-5x fa-fw text-primary"></i>
+                            <span className="sr-only">Loading...</span>
+                        </div>
                     ) : (
-                        data.length ? (
-                            data.map(thread => {
+                        threads.length ? (
+                            threads.map(thread => {
                                 return (
                                     <Thread thread={thread} key={thread.id} />
                                 );

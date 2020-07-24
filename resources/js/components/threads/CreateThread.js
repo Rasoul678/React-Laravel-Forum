@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from 'axios';
-import {useDispatch, useSelector} from "react-redux";
-import {ADD_THREAD} from '../../constants';
+import {useSelector} from "react-redux";
 import Wysiwyg from "../Wysiwyg";
+import {useQuery} from "react-query";
 
 function CreateThread(props) {
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
@@ -14,34 +14,21 @@ function CreateThread(props) {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [channel, setChannel] = useState('');
-    const [channels, setChannels] = useState([]);
 
     const user = JSON.parse(localStorage.getItem('user'));
 
     const formData = { title, body, user_id: user?.id, channel_id:  channel};
 
-    const dispatch = useDispatch();
-
-    useEffect(()=>{
+    const {data: channels} = useQuery('channels', () =>
         Axios.get('/api/channels')
-            .then(response=>{
-                setChannels(response.data);
-            })
-            .catch(error=>{
-                console.log(error);
-            })
-    }, [])
+            .then(response=>response.data)
+    )
 
     const createThread = ()=>{
         const token = localStorage.getItem('access_token');
         const headers = {Authorization: `Bearer ${token}`};
         Axios.post("/api/threads", formData, {headers})
             .then(response => {
-                console.log(response.data);
-                dispatch({
-                    type: ADD_THREAD,
-                    thread: response.data
-                });
                 props.history.push(response.data.path);
                 flash("Your thread has been created.", "success")
             })

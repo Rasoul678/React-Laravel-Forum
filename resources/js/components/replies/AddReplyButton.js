@@ -1,11 +1,35 @@
 import React, {useState} from 'react';
 import {useSelector} from "react-redux";
 import Wysiwyg from "../Wysiwyg";
+import Axios from "axios";
+import {queryCache, useMutation} from "react-query";
 
-const AddReplyButton = (props) => {
+const AddReplyButton = ({thread}) => {
     const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
 
+    const token = localStorage.getItem('access_token');
+    const headers = {Authorization: `Bearer ${token}`};
+
     const [body, setBody] = useState('');
+
+    const addReply = (data) => {
+        Axios({
+            method: 'post',
+            url: `/api/threads/${thread.id}/replies`,
+            data,
+            headers
+        })
+            .then(response => {
+                flash('Your reply has been created.', "success");
+                return response;
+            })
+    }
+
+    const [add] = useMutation(addReply, {
+        onSuccess: () => {
+            queryCache.invalidateQueries('thread')
+        },
+    })
 
     return (
         <div>
@@ -41,9 +65,10 @@ const AddReplyButton = (props) => {
                                 type="button"
                                 className="btn btn-primary"
                                 data-dismiss="modal"
-                                onClick={()=> {
-                                    props.add(body);
-                                }}
+                                onClick={()=>add({
+                                    body,
+                                    auth_user_id: JSON.parse(localStorage.getItem('user')).id
+                                })}
                             >Post</button>
                         </div>
                     </div>

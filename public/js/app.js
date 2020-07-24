@@ -111733,51 +111733,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
 
 
 
 
 
 
-var Profile = function Profile(props) {
-  var _user$threads;
-
+var Profile = function Profile() {
   var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
       username = _useParams.username;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
-      _useState2 = _slicedToArray(_useState, 2),
-      user = _useState2[0],
-      setUser = _useState2[1];
-
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/api/profiles/".concat(username)).then(function (response) {
-      console.log(response);
-      setUser(response.data);
-    })["catch"](function (error) {
-      console.log(error);
+  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_4__["useQuery"])('user', function () {
+    return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/api/profiles/".concat(username)).then(function (response) {
+      return response.data;
     });
-  }, []);
+  }),
+      isLoading = _useQuery.isLoading,
+      user = _useQuery.data;
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-7"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "text-center mt-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Loading...")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "my-5 h3"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h2"
-  }, user.name, " "), "Joined ", moment__WEBPACK_IMPORTED_MODULE_2___default()(user.created_at).fromNow()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), (_user$threads = user.threads) === null || _user$threads === void 0 ? void 0 : _user$threads.map(function (thread) {
+  }, user.name, " "), "Joined ", moment__WEBPACK_IMPORTED_MODULE_2___default()(user.created_at).fromNow()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), user.threads.map(function (thread) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card shadow mt-2",
       key: thread.id
@@ -111796,7 +111785,7 @@ var Profile = function Profile(props) {
         __html: thread.body
       }
     }));
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
     className: "text-center my-5"
@@ -112407,6 +112396,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -112423,15 +112415,42 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var AddReplyButton = function AddReplyButton(props) {
+
+
+var AddReplyButton = function AddReplyButton(_ref) {
+  var thread = _ref.thread;
   var isAuthenticated = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["useSelector"])(function (state) {
     return state.authReducer.isAuthenticated;
   });
+  var token = localStorage.getItem('access_token');
+  var headers = {
+    Authorization: "Bearer ".concat(token)
+  };
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState2 = _slicedToArray(_useState, 2),
       body = _useState2[0],
       setBody = _useState2[1];
+
+  var addReply = function addReply(data) {
+    axios__WEBPACK_IMPORTED_MODULE_3___default()({
+      method: 'post',
+      url: "/api/threads/".concat(thread.id, "/replies"),
+      data: data,
+      headers: headers
+    }).then(function (response) {
+      flash('Your reply has been created.', "success");
+      return response;
+    });
+  };
+
+  var _useMutation = Object(react_query__WEBPACK_IMPORTED_MODULE_4__["useMutation"])(addReply, {
+    onSuccess: function onSuccess() {
+      react_query__WEBPACK_IMPORTED_MODULE_4__["queryCache"].invalidateQueries('thread');
+    }
+  }),
+      _useMutation2 = _slicedToArray(_useMutation, 1),
+      add = _useMutation2[0];
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
@@ -112486,7 +112505,10 @@ var AddReplyButton = function AddReplyButton(props) {
     className: "btn btn-primary",
     "data-dismiss": "modal",
     onClick: function onClick() {
-      props.add(body);
+      return add({
+        body: body,
+        auth_user_id: JSON.parse(localStorage.getItem('user')).id
+      });
     }
   }, "Post"))))));
 };
@@ -112631,7 +112653,6 @@ var RepliesPagination = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, currentReplies === null || currentReplies === void 0 ? void 0 : currentReplies.map(function (reply) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Reply__WEBPACK_IMPORTED_MODULE_2__["default"], {
           reply: reply,
-          "delete": _this2.props["delete"],
           key: reply.id
         });
       })), replies.length > repliesPerPage && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
@@ -112696,10 +112717,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -112756,6 +112777,24 @@ var Reply = function Reply(props) {
   var headers = {
     Authorization: "Bearer ".concat(token)
   };
+
+  var deleteReply = function deleteReply(reply) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
+      headers: headers
+    }).then(function (response) {
+      flash("Your reply has been deleted.", "danger");
+      return response;
+    });
+  };
+
+  var _useMutation = Object(react_query__WEBPACK_IMPORTED_MODULE_5__["useMutation"])(deleteReply, {
+    onSuccess: function onSuccess() {
+      react_query__WEBPACK_IMPORTED_MODULE_5__["queryCache"].invalidateQueries('thread');
+    }
+  }),
+      _useMutation2 = _slicedToArray(_useMutation, 1),
+      destroy = _useMutation2[0];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/user', {
       headers: headers
@@ -112822,7 +112861,7 @@ var Reply = function Reply(props) {
     className: "card-body"
   }, editing ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Wysiwyg__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Wysiwyg__WEBPACK_IMPORTED_MODULE_3__["default"], {
     trixId: reply.id,
     defaultValue: update.body || reply.body,
     onChange: function onChange(content) {
@@ -112844,7 +112883,7 @@ var Reply = function Reply(props) {
     className: "h4"
   }, reply.owner.name)), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
-  }, "said: ", moment__WEBPACK_IMPORTED_MODULE_5___default()(reply.created_at).fromNow())), authUser && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, "said: ", moment__WEBPACK_IMPORTED_MODULE_4___default()(reply.created_at).fromNow())), authUser && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "#",
     className: "h4",
     onClick: function onClick(e) {
@@ -112879,7 +112918,7 @@ var Reply = function Reply(props) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-sm btn-danger",
     onClick: function onClick() {
-      return props["delete"](reply);
+      return destroy(reply);
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-trash",
@@ -112905,8 +112944,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constants */ "./resources/js/constants.js");
-/* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
+/* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -112949,11 +112988,6 @@ function CreateThread(props) {
       channel = _useState6[0],
       setChannel = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState8 = _slicedToArray(_useState7, 2),
-      channels = _useState8[0],
-      setChannels = _useState8[1];
-
   var user = JSON.parse(localStorage.getItem('user'));
   var formData = {
     title: title,
@@ -112961,14 +112995,13 @@ function CreateThread(props) {
     user_id: user === null || user === void 0 ? void 0 : user.id,
     channel_id: channel
   };
-  var dispatch = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["useDispatch"])();
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/channels').then(function (response) {
-      setChannels(response.data);
-    })["catch"](function (error) {
-      console.log(error);
+
+  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_4__["useQuery"])('channels', function () {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/channels').then(function (response) {
+      return response.data;
     });
-  }, []);
+  }),
+      channels = _useQuery.data;
 
   var createThread = function createThread() {
     var token = localStorage.getItem('access_token');
@@ -112978,11 +113011,6 @@ function CreateThread(props) {
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/threads", formData, {
       headers: headers
     }).then(function (response) {
-      console.log(response.data);
-      dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_3__["ADD_THREAD"],
-        thread: response.data
-      });
       props.history.push(response.data.path);
       flash("Your thread has been created.", "success");
     })["catch"](function (error) {
@@ -113046,7 +113074,7 @@ function CreateThread(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "body",
     className: "h5"
-  }, "Body"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Wysiwyg__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, "Body"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Wysiwyg__WEBPACK_IMPORTED_MODULE_3__["default"], {
     trixId: "threadBody",
     placeholder: "Thread Body",
     onChange: function onChange(content) {
@@ -113086,6 +113114,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../replies/AddReplyButton */ "./resources/js/components/replies/AddReplyButton.js");
 /* harmony import */ var _replies_RepliesPagination__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../replies/RepliesPagination */ "./resources/js/components/replies/RepliesPagination.js");
 /* harmony import */ var _Wysiwyg__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Wysiwyg */ "./resources/js/components/Wysiwyg.js");
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -113107,6 +113136,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var ShowThread = function ShowThread(props) {
   var _JSON$parse;
 
@@ -113114,20 +113144,15 @@ var ShowThread = function ShowThread(props) {
       channel = _useParams.channel,
       id = _useParams.id;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
-      thread = _useState2[0],
-      setThread = _useState2[1];
+      editing = _useState2[0],
+      setEditing = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState4 = _slicedToArray(_useState3, 2),
-      editing = _useState4[0],
-      setEditing = _useState4[1];
-
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
-      _useState6 = _slicedToArray(_useState5, 2),
-      body = _useState6[0],
-      setBody = _useState6[1];
+      body = _useState4[0],
+      setBody = _useState4[1];
 
   var inputTitle = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('');
   var token = localStorage.getItem('access_token');
@@ -113135,38 +113160,15 @@ var ShowThread = function ShowThread(props) {
     Authorization: "Bearer ".concat(token)
   };
 
-  var deleteReply = function deleteReply(reply) {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
-      headers: headers
-    }).then(function (response) {
-      setThread(response.data);
-      flash("Your reply has been deleted.", "danger");
-    })["catch"]();
-  };
-
-  var addReply = function addReply(replyBody) {
-    var data = {
-      body: replyBody,
-      auth_user_id: JSON.parse(localStorage.getItem('user')).id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_2___default()({
-      method: 'post',
-      url: "/api/threads/".concat(thread.id, "/replies"),
-      data: data,
-      headers: headers
-    }).then(function (response) {
-      setThread(response.data);
-      flash('Your reply has been created.', "success");
-    })["catch"](function (error) {
-      console.log(error.response.data.message);
+  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_8__["useQuery"])('thread', function () {
+    return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
+      return response.data;
     });
-  };
+  }),
+      isLoading = _useQuery.isLoading,
+      thread = _useQuery.data;
 
-  var updateThread = function updateThread() {
-    var data = {
-      title: inputTitle.current.value || thread.title,
-      body: body || thread.body
-    };
+  var updateThread = function updateThread(data) {
     axios__WEBPACK_IMPORTED_MODULE_2___default()({
       method: 'patch',
       url: "/api/threads/".concat(channel, "/").concat(id),
@@ -113174,12 +113176,18 @@ var ShowThread = function ShowThread(props) {
       headers: headers
     }).then(function (response) {
       setEditing(false);
-      setThread(response.data);
       flash('Your thread has been updated.', "success");
-    })["catch"](function (error) {
-      console.log(error);
+      return response;
     });
   };
+
+  var _useMutation = Object(react_query__WEBPACK_IMPORTED_MODULE_8__["useMutation"])(updateThread, {
+    onSuccess: function onSuccess() {
+      react_query__WEBPACK_IMPORTED_MODULE_8__["queryCache"].invalidateQueries('thread');
+    }
+  }),
+      _useMutation2 = _slicedToArray(_useMutation, 1),
+      update = _useMutation2[0];
 
   var deleteThread = function deleteThread(id) {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/api/threads/" + id, {
@@ -113192,17 +113200,10 @@ var ShowThread = function ShowThread(props) {
     });
   };
 
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
-      setThread(response.data);
-    })["catch"](function (error) {
-      console.log(error.response);
-    });
-  }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, thread ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, !isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    add: addReply
+    thread: thread
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-8"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -113259,7 +113260,10 @@ var ShowThread = function ShowThread(props) {
     title: "Update Thread",
     className: "btn btn-sm btn-primary mr-2",
     onClick: function onClick() {
-      return updateThread();
+      return update({
+        title: inputTitle.current.value || thread.title,
+        body: body || thread.body
+      });
     }
   }, "Update")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     title: "Delete Thread",
@@ -113276,8 +113280,7 @@ var ShowThread = function ShowThread(props) {
       __html: thread.body
     }
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_RepliesPagination__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    replies: thread.replies,
-    "delete": deleteReply
+    replies: thread.replies
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -113289,7 +113292,13 @@ var ShowThread = function ShowThread(props) {
   }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link",
     to: "/profiles/".concat(thread.creator.name)
-  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.repliesCount, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Loading..."));
+  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.repliesCount, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "text-center mt-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Loading...")));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ShowThread);
@@ -113371,15 +113380,19 @@ var Threads = function Threads(props) {
     });
   }),
       isLoading = _useQuery.isLoading,
-      data = _useQuery.data;
+      threads = _useQuery.data;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row my-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-8"
-  }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
-    className: "text-center"
-  }, "Loading ......") : data.length ? data.map(function (thread) {
+  }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "text-center mt-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Loading...")) : threads.length ? threads.map(function (thread) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_3__["default"], {
       thread: thread,
       key: thread.id
