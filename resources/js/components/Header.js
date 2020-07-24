@@ -8,6 +8,9 @@ function Header(props) {
     const [authUser, setAuthUser] = useState(false);
     const [channels, setChannels] = useState([]);
 
+    const token = localStorage.getItem('access_token');
+    const headers = {Authorization: `Bearer ${token}`};
+
     const myThreadsPath = props.location.search ? (
         `${props.location.pathname + props.location.search}&by=${authUser.name}`
     ) : (
@@ -15,8 +18,6 @@ function Header(props) {
     );
 
     useEffect(()=>{
-        const token = localStorage.getItem('access_token');
-        const headers = {Authorization: `Bearer ${token}`};
         Axios.get('/api/auth/user', { headers })
             .then(response=>{
                 setAuthUser(response.data);

@@ -1,50 +1,32 @@
-import React, { Component } from "react";
+import React from "react";
+import { useQuery } from 'react-query';
 import Axios from "axios";
 import Thread from "./Thread";
 
-class Threads extends Component {
-    state = {
-        threads: []
-    };
+const Threads = (props) => {
 
-    componentWillMount() {
-        Axios.get("/api/threads" + this.props.location.search)
+    const {isLoading, data} = useQuery('threads', () =>
+        Axios.get("/api/threads" + props.location.search)
             .then(response => {
-                this.setState({
-                    ...this.state,
-                    threads: response.data
-                });
+                return response.data;
             })
-            .catch(error=>{
-                console.log(error);
-            });
-    }
+    )
 
-    componentDidUpdate(prevProps) {
-        if (this.props.location.search !== prevProps.location.search) {
-            Axios.get("/api/threads" + this.props.location.search)
-                .then(response => {
-                    this.setState({
-                        ...this.state,
-                        threads: response.data
-                    });
-                });
-        }
-    }
-
-    render() {
-        const { threads } = this.state;
         return (
             <div className="row my-4">
                 <div className="col-md-8">
-                    {threads.length ? (
-                        threads.map(thread => {
-                            return (
-                                <Thread thread={thread} key={thread.id} />
-                            );
-                        })
+                    {isLoading ? (
+                        <h1 className="text-center">Loading ......</h1>
                     ) : (
-                        <h1>There is no thread yet!</h1>
+                        data.length ? (
+                            data.map(thread => {
+                                return (
+                                    <Thread thread={thread} key={thread.id} />
+                                );
+                            })
+                        ) : (
+                            <h1>There is no thread yet!</h1>
+                        )
                     )}
                 </div>
                 <div className="col-md-4">
@@ -58,7 +40,6 @@ class Threads extends Component {
                 </div>
             </div>
         );
-    }
 }
 
 export default Threads;

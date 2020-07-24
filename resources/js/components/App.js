@@ -8,6 +8,8 @@ import  Home from './Home';
 import LoginPage from './auth/LoginPage';
 import RegisterPage from "./auth/RegisterPage";
 import Profile from "./Profile";
+import Test from "./Test";
+import { ReactQueryDevtools } from 'react-query-devtools'
 
 class App extends Component {
     render() {
@@ -16,6 +18,7 @@ class App extends Component {
                 <Header />
                 <div className="container">
                     <Switch>
+                        <Route exact path='/test' component={Test} />
                         <Route exact path='/' component={Home} />
                         <Route exact path="/threads" component={Threads} />
                         <Route exact path="/threads/create" component={CreateThread} />
@@ -25,6 +28,7 @@ class App extends Component {
                         <Route exact path='/profiles/:username' component={Profile} />
                     </Switch>
                 </div>
+                <ReactQueryDevtools initialIsOpen />
             </Router>
         );
     }

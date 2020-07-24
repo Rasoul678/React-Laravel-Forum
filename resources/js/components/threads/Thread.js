@@ -2,9 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Pluralize from "pluralize";
 
-const Thread = (props) => {
-
-    const { thread} = props;
+const Thread = ({ thread}) => {
 
     return (
         <div className="card shadow mb-3">
