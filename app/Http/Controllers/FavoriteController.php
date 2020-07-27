@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Reply;
-use App\Favorite;
-use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
@@ -16,16 +14,16 @@ class FavoriteController extends Controller
 
     public function store(Reply $reply)
     {
-        return $reply->like(request('userId'));
+        return $reply->like();
     }
 
     public function destroy(Reply $reply)
     {
-        return $reply->disLike(request('userId'));
+        return $reply->disLike();
     }
 
     public function check(Reply $reply)
     {
-        return $reply->isFavorited(request('authUserId'));
+        return $reply->isFavorited();
     }
 }

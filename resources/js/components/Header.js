@@ -11,10 +11,10 @@ function Header(props) {
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
 
-    const myThreadsPath = props.location.search ? (
-        `${props.location.pathname + props.location.search}&by=${authUser.name}`
+    const myThreadsPath = props.location.pathname === '/threads' ? (
+        `${props.location.pathname}${props.location.search ? props.location.search+'&by=' : '?by='}${authUser.name}`
     ) : (
-        `${props.location.pathname}?by=${authUser.name}`
+        `/threads?by=${authUser.name}`
     );
 
     useEffect(()=>{
@@ -32,6 +32,7 @@ function Header(props) {
             console.log(error);
         });
     }, [props.location.pathname])
+
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
             <div className="container">
@@ -72,12 +73,18 @@ function Header(props) {
                                 className="dropdown-menu"
                                 aria-labelledby="threadsDropdown"
                             >
-                                <Link className="dropdown-item" to="/threads">
+                                <Link
+                                    className="dropdown-item"
+                                    to="/threads"
+                                >
                                     All Threads
                                 </Link>
                                 {
                                     authUser &&
-                                    <Link className="dropdown-item" to={myThreadsPath}>
+                                    <Link
+                                        className="dropdown-item"
+                                        to={myThreadsPath}
+                                    >
                                         My Threads
                                     </Link>
                                 }
@@ -103,7 +110,11 @@ function Header(props) {
                                 {
                                     channels?.map(channel=>{
                                         return (
-                                            <Link className="dropdown-item" key={channel.id} to={`/threads?channel=${channel.slug}`}>
+                                            <Link
+                                                className="dropdown-item"
+                                                key={channel.id}
+                                                to={`/threads?channel=${channel.slug}`}
+                                            >
                                                 {channel.name}
                                             </Link>
                                         )

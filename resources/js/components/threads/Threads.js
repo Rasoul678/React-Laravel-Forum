@@ -1,16 +1,26 @@
-import React from "react";
-import { useQuery } from 'react-query';
+import React, {useState, useEffect} from "react";
 import Axios from "axios";
 import Thread from "./Thread";
+import {useHistory} from "react-router";
 
-const Threads = (props) => {
+const Threads = () => {
 
-    const {isLoading, data: threads} = useQuery('threads', () =>
-        Axios.get("/api/threads" + props.location.search)
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [threads, setThreads] = useState([])
+
+    const history = useHistory();
+
+    useEffect(()=>{
+        Axios.get(`/api${history.location.pathname}${history.location.search}`)
             .then(response => {
-                return response.data;
+                setIsLoading(false);
+                setThreads(response.data);
             })
-    )
+            .catch(error=>{
+                setIsLoading(false);
+            })
+    }, [history.location])
 
         return (
             <div className="row my-4">
@@ -22,7 +32,7 @@ const Threads = (props) => {
                         </div>
                     ) : (
                         threads.length ? (
-                            threads.map(thread => {
+                            threads?.map(thread => {
                                 return (
                                     <Thread thread={thread} key={thread.id} />
                                 );

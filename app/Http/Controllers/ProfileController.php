@@ -8,8 +8,10 @@ class ProfileController extends Controller
 {
     public function show(User $user)
     {
-        $user = User::with('threads')->whereId($user->id)->first();
+        $activities = $user->activities()->latest()->with('subject')->get()->groupBy(function ($activity){
+            return $activity->created_at->format('Y-m-d');
+        });
 
-        return response()->json($user);
+        return response()->json(['activities'=>$activities, 'user'=>$user]);
     }
 }

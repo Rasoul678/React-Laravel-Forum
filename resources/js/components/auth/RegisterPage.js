@@ -32,6 +32,7 @@ const RegisterPage = (props)=>{
                                     onChange={(e)=>{
                                         setName(e.target.value);
                                     }}
+                                    autoFocus
                                 />
                                 <div className="invalid-feedback">
                                     {errors.email && errors.email[0]}

@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 use App\Favorite;
+use Illuminate\Support\Facades\Auth;
 
 trait Favorable
 {
@@ -12,23 +13,23 @@ trait Favorable
         return $this->morphMany(Favorite::class, 'favorited');
     }
 
-    public function isFavorited($authUserId)
+    public function isFavorited()
     {
-        return $this->favorites()->where('user_id', $authUserId)->exists();
+        return $this->favorites()->where('user_id', Auth::id())->exists();
     }
 
-    public function disLike($userId)
+    public function disLike()
     {
-        if ($this->favorites()->where('user_id', $userId)->exists()) {
-            $this->favorites()->where('user_id', $userId)->delete();
+        if ($this->favorites()->where('user_id', Auth::id())->exists()) {
+            $this->favorites()->where('user_id', Auth::id())->delete();
         }
         return $this;
     }
 
-    public function like($userId)
+    public function like()
     {
-        if (!$this->favorites()->where('user_id', $userId)->exists()) {
-            $this->favorites()->create(['user_id' => $userId,]);
+        if (!$this->favorites()->where('user_id', Auth::id())->exists()) {
+            $this->favorites()->create(['user_id' => Auth::id()]);
         }
         return $this;
     }

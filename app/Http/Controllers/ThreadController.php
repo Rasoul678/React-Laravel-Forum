@@ -34,7 +34,7 @@ class ThreadController extends Controller
     }
 
     public function show(Channel $channel,Thread $thread){
-        return Thread::whereId($thread->id)->first();
+        return Thread::whereId($thread->id)->first()->load('replies');
     }
 
     public function update(Channel $channel,Thread $thread)

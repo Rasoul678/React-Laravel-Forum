@@ -97478,6 +97478,53 @@ exports.classNamesShape = classNamesShape;
 
 /***/ }),
 
+/***/ "./node_modules/react-uuid/uuid.js":
+/*!*****************************************!*\
+  !*** ./node_modules/react-uuid/uuid.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+A function that returns a universally unique identifier (uuid).  
+example: 1b83fd69-abe7-468c-bea1-306a8aa1c81d
+@returns `string` : 32 character uuid (see example)
+*/
+function uuid() {
+  const hashTable = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9'
+  ]
+  let uuid = []
+  for (let i = 0; i < 35; i++) {
+    if (i === 7 || i === 12 || i === 17 || i === 22) {
+      uuid[i] = '-'
+    } else {
+      uuid[i] = hashTable[Math.floor(Math.random() * hashTable.length - 1)]
+    }
+  }
+  return uuid.join('')
+}
+
+module.exports = uuid
+
+
+/***/ }),
+
 /***/ "./node_modules/react/cjs/react.development.js":
 /*!*****************************************************!*\
   !*** ./node_modules/react/cjs/react.development.js ***!
@@ -111603,7 +111650,7 @@ function Header(props) {
   var headers = {
     Authorization: "Bearer ".concat(token)
   };
-  var myThreadsPath = props.location.search ? "".concat(props.location.pathname + props.location.search, "&by=").concat(authUser.name) : "".concat(props.location.pathname, "?by=").concat(authUser.name);
+  var myThreadsPath = props.location.pathname === '/threads' ? "".concat(props.location.pathname).concat(props.location.search ? props.location.search + '&by=' : '?by=').concat(authUser.name) : "/threads?by=".concat(authUser.name);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/api/auth/user', {
       headers: headers
@@ -111728,12 +111775,27 @@ function Home() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
+/* harmony import */ var react_uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-uuid */ "./node_modules/react-uuid/uuid.js");
+/* harmony import */ var react_uuid__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_uuid__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
@@ -111741,21 +111803,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Profile = function Profile() {
-  var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
+  var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["useParams"])(),
       username = _useParams.username;
 
-  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_4__["useQuery"])('user', function () {
-    return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/api/profiles/".concat(username)).then(function (response) {
+  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_5__["useQuery"])('user', function () {
+    return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/api/profiles/".concat(username)).then(function (response) {
       return response.data;
     });
   }),
       isLoading = _useQuery.isLoading,
-      user = _useQuery.data;
+      data = _useQuery.data;
+
+  String.prototype.capitalize = function () {
+    if (typeof this !== 'string') return '';
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "col-md-7"
+    className: "col-md-8"
   }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "text-center mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -111765,28 +111832,36 @@ var Profile = function Profile() {
   }, "Loading...")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "my-5 h3"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "h2"
-  }, user.name, " "), "Joined ", moment__WEBPACK_IMPORTED_MODULE_2___default()(user.created_at).fromNow()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), user.threads.map(function (thread) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card shadow mt-2",
-      key: thread.id
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card-footer d-flex justify-content-between"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      className: "h4"
-    }, "Title : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-      className: "card-link",
-      to: thread.path
-    }, thread.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      className: "h6"
-    }, "Posted: ", moment__WEBPACK_IMPORTED_MODULE_2___default()(thread.created_at).fromNow())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card-body",
-      dangerouslySetInnerHTML: {
-        __html: thread.body
-      }
+    className: "h3"
+  }, (data === null || data === void 0 ? void 0 : data.user) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, data.user.name, " Joined ", moment__WEBPACK_IMPORTED_MODULE_3___default()(data === null || data === void 0 ? void 0 : data.user.created_at).fromNow()))), (data === null || data === void 0 ? void 0 : data.activities) && Object.entries(data.activities).map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        date = _ref2[0],
+        records = _ref2[1];
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
+      key: react_uuid__WEBPACK_IMPORTED_MODULE_1___default()()
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
+      className: "text-danger my-4"
+    }, moment__WEBPACK_IMPORTED_MODULE_3___default()(date).format('MMMM Do YYYY')), records.map(function (record) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card shadow mt-2",
+        key: record.id
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-footer d-flex justify-content-between"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "h4"
+      }, data.user.name, " ", record.type.split('_')[0].capitalize(), " This ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        className: "card-link",
+        to: record.subject.path || record.subject.thread.path
+      }, record.type.split('_')[1].capitalize()))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-body",
+        dangerouslySetInnerHTML: {
+          __html: record.subject.body
+        }
+      }));
     }));
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "col-md-5"
+    className: "col-md-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
     className: "text-center my-5"
   }, "Extra Information")));
@@ -112177,7 +112252,8 @@ function LoginPage(props) {
     name: "email",
     onChange: function onChange(e) {
       setEmail(e.target.value);
-    }
+    },
+    autoFocus: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "invalid-feedback"
   }, errors.email && errors.email[0])), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -112314,7 +112390,8 @@ var RegisterPage = function RegisterPage(props) {
     name: "name",
     onChange: function onChange(e) {
       setName(e.target.value);
-    }
+    },
+    autoFocus: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "invalid-feedback"
   }, errors.email && errors.email[0])), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -112740,8 +112817,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var Reply = function Reply(props) {
-  var reply = props.reply;
+var Reply = function Reply(_ref) {
+  var reply = _ref.reply;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -112800,17 +112877,15 @@ var Reply = function Reply(props) {
       headers: headers
     }).then(function (response) {
       setAuthUser(response.data);
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/api/replies/".concat(reply.id, "/favorites/favorited"), {
-        authUserId: response.data.id
-      }, {
-        headers: headers
-      }).then(function (response) {
-        setIsFavorited(!!response.data);
-      })["catch"](function (error) {
-        console.log(error);
-      });
     })["catch"](function (error) {
       setAuthUser(false);
+      console.log(error);
+    });
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/replies/".concat(reply.id, "/favorites/favorited"), {
+      headers: headers
+    }).then(function (response) {
+      setIsFavorited(!!response.data);
+    })["catch"](function (error) {
       console.log(error);
     });
   }, [update]);
@@ -112835,17 +112910,9 @@ var Reply = function Reply(props) {
 
   var toggleFavorite = function toggleFavorite(e) {
     e.preventDefault();
-    var token = localStorage.getItem('access_token');
-    var headers = {
-      Authorization: "Bearer ".concat(token)
-    };
-    var data = {
-      userId: authUser.id
-    };
     axios__WEBPACK_IMPORTED_MODULE_2___default()({
-      method: isFavorited ? 'delete' : 'post',
+      method: isFavorited ? 'delete' : 'get',
       url: "/api/replies/".concat(reply.id, "/favorites"),
-      data: data,
       headers: headers
     }).then(function (response) {
       setFavoritesCount(response.data.favoritesCount);
@@ -113364,24 +113431,47 @@ var Thread = function Thread(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-query */ "./node_modules/react-query/dist/react-query.mjs");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Thread__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Thread */ "./resources/js/components/threads/Thread.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Thread__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Thread */ "./resources/js/components/threads/Thread.js");
+/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
 
 
-var Threads = function Threads(props) {
-  var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_1__["useQuery"])('threads', function () {
-    return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads" + props.location.search).then(function (response) {
-      return response.data;
+
+var Threads = function Threads() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+      _useState2 = _slicedToArray(_useState, 2),
+      isLoading = _useState2[0],
+      setIsLoading = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      threads = _useState4[0],
+      setThreads = _useState4[1];
+
+  var history = Object(react_router__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api".concat(history.location.pathname).concat(history.location.search)).then(function (response) {
+      setIsLoading(false);
+      setThreads(response.data);
+    })["catch"](function (error) {
+      setIsLoading(false);
     });
-  }),
-      isLoading = _useQuery.isLoading,
-      threads = _useQuery.data;
-
+  }, [history.location]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row my-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -113392,8 +113482,8 @@ var Threads = function Threads(props) {
     className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "sr-only"
-  }, "Loading...")) : threads.length ? threads.map(function (thread) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, "Loading...")) : threads.length ? threads === null || threads === void 0 ? void 0 : threads.map(function (thread) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_2__["default"], {
       thread: thread,
       key: thread.id
     });

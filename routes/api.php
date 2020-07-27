@@ -43,10 +43,10 @@ Route::get('/threads/{thread}/replies', 'ReplyController@index');
 
 Route::get('/channels', 'ChannelController@index');
 
-Route::post('/replies/{reply}/favorites', 'FavoriteController@store');
+Route::get('/replies/{reply}/favorites', 'FavoriteController@store');
 
 Route::delete('/replies/{reply}/favorites', 'FavoriteController@destroy');
 
-Route::post('/replies/{reply}/favorites/favorited', 'FavoriteController@check');
+Route::get('/replies/{reply}/favorites/favorited', 'FavoriteController@check');
 
 Route::get('/profiles/{user:name}', 'ProfileController@show');

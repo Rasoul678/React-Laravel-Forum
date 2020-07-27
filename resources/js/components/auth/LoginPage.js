@@ -32,6 +32,7 @@ function LoginPage(props) {
                                     onChange={(e)=>{
                                         setEmail(e.target.value);
                                     }}
+                                    autoFocus
                                 />
                                 <div className="invalid-feedback">
                                     {errors.email && errors.email[0]}

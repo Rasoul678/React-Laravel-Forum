@@ -3,21 +3,22 @@
 namespace App;
 
 use App\Traits\Favorable;
+use App\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
-    use Favorable;
+    use Favorable, Recordable;
 
     protected $guarded = [];
 
-    protected $with = ['owner', 'favorites'];
+    protected $with = ['owner', 'favorites', 'thread'];
 
     protected $appends = ['favoritesCount'];
 
-    protected static function booted()
+    protected static function boot()
     {
-        parent::booted();
+        parent::boot();
 
         static::deleting(function ($reply) {
                 $reply->favorites()->delete();

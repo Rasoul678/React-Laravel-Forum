@@ -5,8 +5,7 @@ import Wysiwyg from "../Wysiwyg";
 import moment from "moment";
 import {queryCache, useMutation} from "react-query";
 
-const Reply = (props) =>{
-    const {reply } = props;
+const Reply = ({reply }) =>{
 
     const [authUser, setAuthUser] = useState(false);
 
@@ -41,16 +40,16 @@ const Reply = (props) =>{
         Axios.get('/api/auth/user', { headers })
             .then(response=>{
                 setAuthUser(response.data);
-                Axios.post(`/api/replies/${reply.id}/favorites/favorited`,{authUserId: response.data.id}, { headers })
-                    .then(response=>{
-                        setIsFavorited(!! response.data);
-                    }).catch(error=>{
-                        console.log(error);
-                    });
             })
             .catch(error=>{
                 setAuthUser(false);
                 console.log(error);
+        });
+        Axios.get(`/api/replies/${reply.id}/favorites/favorited`,{ headers })
+            .then(response=>{
+                setIsFavorited(!! response.data);
+            }).catch(error=>{
+            console.log(error);
         });
     }, [update])
 
@@ -74,13 +73,9 @@ const Reply = (props) =>{
 
     const toggleFavorite = (e) =>{
         e.preventDefault();
-        const token = localStorage.getItem('access_token');
-        const headers = {Authorization: `Bearer ${token}`};
-        const data = {userId: authUser.id};
         Axios({
-            method: isFavorited ? 'delete' : 'post',
+            method: isFavorited ? 'delete' : 'get',
             url: `/api/replies/${reply.id}/favorites`,
-            data,
             headers
         })
             .then(response=>{

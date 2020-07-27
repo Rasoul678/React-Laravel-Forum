@@ -28,7 +28,7 @@ class App extends Component {
                         <Route exact path='/profiles/:username' component={Profile} />
                     </Switch>
                 </div>
-                <ReactQueryDevtools initialIsOpen />
+                <ReactQueryDevtools initialIsOpen={false} />
             </Router>
         );
     }

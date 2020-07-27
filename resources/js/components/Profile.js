@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import uuid from 'react-uuid'
 import {Link, useParams} from "react-router-dom";
 import moment from "moment";
 import Axios from 'axios';
@@ -8,14 +9,19 @@ const Profile = () => {
 
     const {username} = useParams();
 
-    const {isLoading, data: user} = useQuery('user', () =>
+    const {isLoading, data} = useQuery('user', () =>
         Axios.get(`/api/profiles/${username}`)
             .then(response => response.data)
     )
 
+    String.prototype.capitalize = function() {
+        if (typeof this !== 'string') return '';
+        return this.charAt(0).toUpperCase() + this.slice(1)
+    }
+
     return (
         <div className="row">
-            <div className="col-md-7">
+            <div className="col-md-8">
                 {isLoading ? (
                     <div className="text-center mt-5">
                         <i className="fa fa-cog fa-spin fa-5x fa-fw text-primary"></i>
@@ -24,26 +30,42 @@ const Profile = () => {
                 ) : (
                     <div>
                         <div className="my-5 h3">
-                            <span className='h2'>{user.name} </span>Joined {moment(user.created_at).fromNow()}
+                            <span className='h3'>
+                                {
+                                    data?.user &&
+                                    <Fragment>
+                                        {data.user.name} Joined {moment(data?.user.created_at).fromNow()}
+                                    </Fragment>
+                                }
+                            </span>
                         </div>
-                        <hr/>
                         {
-                            user.threads.map(thread => {
+                            data?.activities &&
+                            Object.entries(data.activities).map(([date, records]) => {
                                 return (
-                                    <div className="card shadow mt-2" key={thread.id}>
-                                        <div className="card-footer d-flex justify-content-between">
-                                            <span className='h4'>Title : <Link className="card-link" to={thread.path}>{thread.title}</Link></span>
-                                            <span className='h6'>Posted: {moment(thread.created_at).fromNow()}</span>
-                                        </div>
-                                        <div className="card-body" dangerouslySetInnerHTML={{__html: thread.body}}/>
-                                    </div>
+                                    <Fragment key={uuid()}>
+                                        <hr/>
+                                        <h3 className="text-danger my-4">{moment(date).format('MMMM Do YYYY')}</h3>
+                                        {
+                                            records.map(record=>{
+                                                return (
+                                                    <div className="card shadow mt-2" key={record.id}>
+                                                        <div className="card-footer d-flex justify-content-between">
+                                                            <span className='h4'>{data.user.name} {(record.type).split('_')[0].capitalize()} This <Link className="card-link" to={record.subject.path || record.subject.thread.path}>{(record.type).split('_')[1].capitalize()}</Link></span>
+                                                        </div>
+                                                        <div className="card-body" dangerouslySetInnerHTML={{__html: record.subject.body}}/>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </Fragment>
                                 )
                             })
                         }
                     </div>
                 )}
             </div>
-            <div className="col-md-5">
+            <div className="col-md-4">
                 <h3 className='text-center my-5'>Extra Information</h3>
             </div>
         </div>

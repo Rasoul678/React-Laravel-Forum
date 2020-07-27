@@ -2,26 +2,30 @@
 
 namespace App;
 
+use App\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use Recordable;
+
     protected $guarded = [];
 
-    protected $with = ['creator', 'replies', 'channel'];
+    protected $with = ['creator', 'channel'];
 
     protected $appends = ['path', 'repliesCount'];
 
-    protected static function booted()
+    protected static function boot()
     {
-        parent::booted();
+        parent::boot();
 
         static::deleting(function ($thread) {
             foreach ($thread->replies as $reply)
             {
                 $reply->favorites()->delete();
             }
-            $thread->replies()->delete();
+
+            $thread->replies->each->delete();
         });
     }
 
