@@ -88,7 +88,7 @@ const Reply = ({reply }) =>{
     }
 
     return (
-        <div className='card my-3'>
+        <div className='card my-3' id={`#${reply.id}`}>
             <div className="card-body">
                 {
                     editing ? (

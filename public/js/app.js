@@ -111590,7 +111590,7 @@ var App = /*#__PURE__*/function (_Component) {
         path: "/profiles/:username",
         component: _Profile__WEBPACK_IMPORTED_MODULE_9__["default"]
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_query_devtools__WEBPACK_IMPORTED_MODULE_11__["ReactQueryDevtools"], {
-        initialIsOpen: true
+        initialIsOpen: false
       }));
     }
   }]);
@@ -111711,7 +111711,10 @@ function Header(props) {
   }, "All Threads"), authUser && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "dropdown-item",
     to: myThreadsPath
-  }, "My Threads"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, "My Threads"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "dropdown-item",
+    to: "/threads?unanswered=1"
+  }, "Unanswered Threads"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item dropdown"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     className: "navbar-brand dropdown-toggle",
@@ -111852,7 +111855,7 @@ var Profile = function Profile() {
         className: "h4"
       }, data.user.name, " ", record.type.split('_')[0].capitalize(), " This ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
         className: "card-link",
-        to: record.subject.path || record.subject.thread.path
+        to: record.subject.path || record.subject.thread.path + "#" + record.subject.id
       }, record.type.split('_')[1].capitalize()))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body",
         dangerouslySetInnerHTML: {
@@ -112583,8 +112586,7 @@ var AddReplyButton = function AddReplyButton(_ref) {
     "data-dismiss": "modal",
     onClick: function onClick() {
       return add({
-        body: body,
-        auth_user_id: JSON.parse(localStorage.getItem('user')).id
+        body: body
       });
     }
   }, "Post"))))));
@@ -112923,7 +112925,8 @@ var Reply = function Reply(_ref) {
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card my-3"
+    className: "card my-3",
+    id: "#".concat(reply.id)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
   }, editing ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -113359,7 +113362,7 @@ var ShowThread = function ShowThread(props) {
   }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link",
     to: "/profiles/".concat(thread.creator.name)
-  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.repliesCount, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.replies_count, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "text-center mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
@@ -113397,16 +113400,16 @@ var Thread = function Thread(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-header"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "d-flex justify-content-between"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card-title"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    className: "card-title d-flex justify-content-between"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link h4",
     to: "/profiles/".concat(thread.creator.name)
   }, thread.creator.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link text-dark h5",
     to: thread.path
-  }, thread.title, " ( has ", pluralize__WEBPACK_IMPORTED_MODULE_2___default()('reply', thread.repliesCount, true), " )")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "Posted: ", thread.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "card-link text-dark h5"
+  }, pluralize__WEBPACK_IMPORTED_MODULE_2___default()('reply', thread.replies_count, true)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-text",

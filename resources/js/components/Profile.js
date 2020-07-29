@@ -51,7 +51,7 @@ const Profile = () => {
                                                 return (
                                                     <div className="card shadow mt-2" key={record.id}>
                                                         <div className="card-footer d-flex justify-content-between">
-                                                            <span className='h4'>{data.user.name} {(record.type).split('_')[0].capitalize()} This <Link className="card-link" to={record.subject.path || record.subject.thread.path}>{(record.type).split('_')[1].capitalize()}</Link></span>
+                                                            <span className='h4'>{data.user.name} {(record.type).split('_')[0].capitalize()} This <Link className="card-link" to={record.subject.path || record.subject.thread.path + "#" + record.subject.id}>{(record.type).split('_')[1].capitalize()}</Link></span>
                                                         </div>
                                                         <div className="card-body" dangerouslySetInnerHTML={{__html: record.subject.body}}/>
                                                     </div>

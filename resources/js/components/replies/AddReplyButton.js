@@ -65,10 +65,7 @@ const AddReplyButton = ({thread}) => {
                                 type="button"
                                 className="btn btn-primary"
                                 data-dismiss="modal"
-                                onClick={()=>add({
-                                    body,
-                                    auth_user_id: JSON.parse(localStorage.getItem('user')).id
-                                })}
+                                onClick={()=>add({body})}
                             >Post</button>
                         </div>
                     </div>

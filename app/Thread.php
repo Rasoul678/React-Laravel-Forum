@@ -13,7 +13,7 @@ class Thread extends Model
 
     protected $with = ['creator', 'channel'];
 
-    protected $appends = ['path', 'repliesCount'];
+    protected $appends = ['path'];
 
     protected static function boot()
     {
@@ -49,13 +49,13 @@ class Thread extends Model
         return "/threads/" . $this->channel->slug . "/" . $this->id;
     }
 
-    public function getRepliesCountAttribute()
-    {
-        return $this->replies()->count();
-    }
-
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
+    }
+
+    public function addReply($reply)
+    {
+        return $this->replies()->create($reply);;
     }
 }

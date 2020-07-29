@@ -22,6 +22,11 @@ class Reply extends Model
 
         static::deleting(function ($reply) {
                 $reply->favorites()->delete();
+                $reply->thread()->decrement('replies_count');
+        });
+
+        static::created(function($reply){
+            $reply->thread()->increment('replies_count');
         });
     }
 

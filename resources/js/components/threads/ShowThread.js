@@ -150,7 +150,7 @@ const ShowThread = (props) => {
                                     <Link className='card-link' to={`/profiles/${thread.creator.name}`}>
                                         {" " + thread.creator.name}
                                     </Link>
-                                    , and currently has {Pluralize('comment', thread.repliesCount, true)}.
+                                    , and currently has {Pluralize('comment', thread.replies_count, true)}.
                                 </h5>
                             </div>
                         </div>

@@ -88,6 +88,12 @@ function Header(props) {
                                         My Threads
                                     </Link>
                                 }
+                                <Link
+                                    className="dropdown-item"
+                                    to="/threads?unanswered=1"
+                                >
+                                    Unanswered Threads
+                                </Link>
                             </div>
                         </li>
                         <li className="nav-item dropdown">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Thread;
 use App\Reply;
+use Illuminate\Support\Facades\Auth;
 
 class ReplyController extends Controller
 {
@@ -18,15 +19,14 @@ class ReplyController extends Controller
     }
 
     public function store (Thread $thread){
-        $attributes = request()->validate([
+        request()->validate([
             'body'=>'required'
         ]);
 
-        $attributes['thread_id'] = $thread->id;
-
-        $attributes['user_id'] = request('auth_user_id');
-
-        $reply = Reply::create($attributes);
+        $reply = $thread->addReply([
+            'body'=>request('body'),
+            'user_id'=>Auth::id()
+        ]);
 
         return response()->json($reply->thread);
     }

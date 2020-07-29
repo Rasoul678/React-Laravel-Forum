@@ -9,7 +9,7 @@ use App\User;
 
 class ThreadFilters extends Filters
 {
-    protected $filters = ['by', 'channel'];
+    protected $filters = ['by', 'channel', 'unanswered'];
 
     /**
      * Filter the query by a given username.
@@ -35,6 +35,11 @@ class ThreadFilters extends Filters
         $channel = Channel::whereSlug($channelSlug)->first();
 
         return $this->builder->where('channel_id', $channel->id);
+    }
+
+    public function unanswered()
+    {
+        return $this->builder->where('replies_count', 0);
     }
 
 }
