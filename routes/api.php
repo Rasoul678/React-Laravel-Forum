@@ -51,6 +51,10 @@ Route::get('/replies/{reply}/favorites/favored', 'FavoriteController@check');
 
 Route::get('/profiles/{user:name}', 'ProfileController@show');
 
+Route::get('/profiles/{user}/notifications', 'NotificationController@index');
+
+Route::delete('/profiles/{user}/notifications/{notification}', 'NotificationController@destroy');
+
 Route::post('/threads/{thread}/subscriptions', 'SubscriptionController@store');
 
 Route::delete('/threads/{thread}/subscriptions', 'SubscriptionController@destroy');

@@ -109130,6 +109130,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function Header(props) {
+  var _authUser$unread_noti, _authUser$unread_noti2;
+
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
       authUser = _useState2[0],
@@ -109145,6 +109147,13 @@ function Header(props) {
     Authorization: "Bearer ".concat(token)
   };
   var myThreadsPath = props.location.pathname === '/threads' ? "".concat(props.location.pathname).concat(props.location.search ? props.location.search + '&by=' : '?by=').concat(authUser.name) : "/threads?by=".concat(authUser.name);
+
+  var markAsRead = function markAsRead(notificationId) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/api/profiles/".concat(authUser.id, "/notifications/").concat(notificationId), {
+      headers: headers
+    });
+  };
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/user', {
       headers: headers
@@ -109233,7 +109242,32 @@ function Header(props) {
     }, channel.name);
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "navbar-nav ml-auto"
-  }, authUser ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoggedInLinks__WEBPACK_IMPORTED_MODULE_3__["default"], null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoggedOutLinks__WEBPACK_IMPORTED_MODULE_4__["default"], null)))));
+  }, authUser && (authUser === null || authUser === void 0 ? void 0 : (_authUser$unread_noti = authUser.unread_notifications) === null || _authUser$unread_noti === void 0 ? void 0 : _authUser$unread_noti.length) !== 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "nav-item dropdown"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    className: "navbar-brand dropdown-toggle",
+    to: "#",
+    id: "channelsDropdown",
+    role: "button",
+    "data-toggle": "dropdown",
+    "aria-haspopup": "true",
+    "aria-expanded": "false"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-bell-o",
+    "aria-hidden": "true"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dropdown-menu",
+    "aria-labelledby": "channelsDropdown"
+  }, authUser === null || authUser === void 0 ? void 0 : (_authUser$unread_noti2 = authUser.unread_notifications) === null || _authUser$unread_noti2 === void 0 ? void 0 : _authUser$unread_noti2.map(function (notification) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+      className: "dropdown-item",
+      onClick: function onClick() {
+        return markAsRead(notification.id);
+      },
+      to: notification.data.link,
+      key: notification.id
+    }, notification.data.message);
+  }))), authUser ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoggedInLinks__WEBPACK_IMPORTED_MODULE_3__["default"], null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoggedOutLinks__WEBPACK_IMPORTED_MODULE_4__["default"], null)))));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Header));
@@ -109585,7 +109619,7 @@ var LoggedInLinks = function LoggedInLinks() {
     className: "h5"
   }, "+New")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "navbar-brand",
-    to: "/profiles/".concat(user.name)
+    to: "/profiles/".concat(user === null || user === void 0 ? void 0 : user.name)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "h5"
   }, user === null || user === void 0 ? void 0 : user.name))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {

@@ -18,6 +18,10 @@ function Header(props) {
         `/threads?by=${authUser.name}`
     );
 
+    const markAsRead = (notificationId) =>{
+        Axios.delete(`/api/profiles/${authUser.id}/notifications/${notificationId}`, {headers});
+    }
+
     useEffect(()=>{
         Axios.get('/api/auth/user', { headers })
             .then(response=>{
@@ -133,6 +137,41 @@ function Header(props) {
                         </li>
                     </ul>
                     <ul className='navbar-nav ml-auto'>
+                        {
+                           authUser && authUser?.unread_notifications?.length !== 0 &&
+                            <li className="nav-item dropdown">
+                                <a
+                                    className="navbar-brand dropdown-toggle"
+                                    to="#"
+                                    id="channelsDropdown"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <i className="fa fa-bell-o" aria-hidden="true"></i>
+                                </a>
+
+                                <div
+                                    className="dropdown-menu"
+                                    aria-labelledby="channelsDropdown"
+                                >
+                                    {
+                                        authUser?.unread_notifications?.map(notification=>{
+                                            return (
+                                                <Link
+                                                    className="dropdown-item"
+                                                    onClick={()=>markAsRead(notification.id)}
+                                                    to={notification.data.link}
+                                                    key={notification.id}>
+                                                    {notification.data.message}
+                                                </Link>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </li>
+                        }
                         {authUser ? (<LoggedInLinks />) : (<LoggedOutLinks/>)}
                     </ul>
                 </div>

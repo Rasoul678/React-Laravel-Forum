@@ -28,7 +28,7 @@ const LoggedInLinks = () => {
                 <Link className="navbar-brand" to="/threads/create">
                     <span className="h5">+New</span>
                 </Link>
-                <Link className="navbar-brand" to={`/profiles/${user.name}`}>
+                <Link className="navbar-brand" to={`/profiles/${user?.name}`}>
                     <span className="h5">{ user?.name }</span>
                 </Link>
             </li>

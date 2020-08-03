@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -38,6 +37,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['unread'];
+
     public function threads()
     {
         return $this->hasMany(Thread::class)->latest();
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function getUnreadAttribute()
+    {
+        return $this->unreadNotifications;
     }
 }

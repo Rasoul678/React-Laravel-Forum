@@ -2,9 +2,9 @@
 
 namespace App;
 
+use App\Notifications\ThreadHasReply;
 use App\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Thread extends Model
 {
@@ -57,7 +57,17 @@ class Thread extends Model
 
     public function addReply($reply)
     {
-        return $this->replies()->create($reply);;
+        $reply = $this->replies()->create($reply);
+
+        foreach ($this->subscriptions as $subscription)
+        {
+            if($subscription->user_id !== $reply->user_id)
+            {
+                $subscription->user->notify(new ThreadHasReply($this, $reply));
+            }
+        }
+
+        return $reply;
     }
 
     public function subscribe($userId)
