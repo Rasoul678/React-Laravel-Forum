@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Axios from 'axios';
-import {useSelector} from "react-redux";
 import Wysiwyg from "../Wysiwyg";
 import {useQuery} from "react-query";
 
 function CreateThread(props) {
-    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
 
-    if(! isAuthenticated){
+    const authUser = localStorage.getItem('user');
+
+    if(! authUser){
         props.history.push('/login');
     }
 

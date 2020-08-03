@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {withRouter} from "react-router-dom";
 import { Link } from "react-router-dom";
-import Authentication from './auth/Authentication';
 import Axios from "axios";
+import LoggedInLinks from "./auth/LoggedInLinks";
+import LoggedOutLinks from "./auth/LoggedOutLinks";
 
 function Header(props) {
     const [authUser, setAuthUser] = useState(false);
@@ -21,8 +22,10 @@ function Header(props) {
         Axios.get('/api/auth/user', { headers })
             .then(response=>{
                 setAuthUser(response.data);
+                localStorage.setItem('user', JSON.stringify(response.data));
             }).catch(error=>{
                 setAuthUser(false);
+                localStorage.removeItem('user');
                 console.log(error);
         });
         Axios.get('/api/channels')
@@ -130,7 +133,7 @@ function Header(props) {
                         </li>
                     </ul>
                     <ul className='navbar-nav ml-auto'>
-                        <Authentication user={authUser}/>
+                        {authUser ? (<LoggedInLinks />) : (<LoggedOutLinks/>)}
                     </ul>
                 </div>
             </div>

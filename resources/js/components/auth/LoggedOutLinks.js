@@ -1,9 +1,9 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 
-function LogedOutLinks (){
+function LoggedOutLinks (){
     return (
-        <Fragment>
+        <>
             <li className="nav-item">
                 <Link className="navbar-brand" to="/login">
                     <span className="h5">Login</span>
@@ -14,8 +14,8 @@ function LogedOutLinks (){
                     <span className="h5">Register</span>
                 </Link>
             </li>
-        </Fragment>
+        </>
     )
 }
 
-export default LogedOutLinks;
+export default LoggedOutLinks;

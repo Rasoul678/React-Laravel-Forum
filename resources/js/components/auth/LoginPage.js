@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import {useDispatch, useSelector} from "react-redux";
 
 function LoginPage(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
 
-    const dispatch = useDispatch();
+    const user = localStorage.getItem('user');
 
-    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
-
-    if(isAuthenticated){
+    if(user){
         props.history.push('/');
     }
 
@@ -65,7 +62,6 @@ function LoginPage(props) {
                                     localStorage.setItem("access_token", response.data.access_token);
                                     window.axios.defaults.headers.common["Authorization"] =
                                         "Bearer " + response.data.access_token;
-                                    dispatch({type: 'LOG_IN'});
                                     props.history.goBack();
                                     flash("Welcome " +response.data.user.name, "success");
                                 })

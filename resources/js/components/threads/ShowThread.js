@@ -1,4 +1,4 @@
-import React, {useState, useRef, Fragment} from "react";
+import React, {useState, useRef} from "react";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
@@ -23,6 +23,11 @@ const ShowThread = (props) => {
         Axios.get(`/api/threads/${channel}/${id}`)
             .then(response => response.data)
     )
+
+    const {data: authUser} = useQuery('authUser', ()=>{
+        Axios.get('/api/auth/user', { headers })
+            .then(response=> response.data);
+    })
 
     const updateThread = (data) =>{
         Axios({
@@ -59,7 +64,7 @@ const ShowThread = (props) => {
         <div>
             {!isLoading ? (
                 <div className="row mt-5">
-                    <AddReplyButton thread={thread}/>
+                    <AddReplyButton thread={thread} authUser={authUser}/>
                     <div className="col-md-8">
                         <div className="card shadow sticky-top mb-5">
                             <div className="card-body">
@@ -80,13 +85,13 @@ const ShowThread = (props) => {
                                                     </div>
                                                 </form>
                                             ) : (
-                                                <Fragment>
+                                                <>
                                                     <a href={`/profiles/${thread.creator.name}`} className="card-link h4">
                                                         {thread.creator.name}
                                                     </a>{" "}
                                                     posted: {' '}
                                                     {thread.title}
-                                                </Fragment>
+                                                </>
                                             )
                                         }
                                     </div>
@@ -139,7 +144,7 @@ const ShowThread = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <RepliesPagination replies={thread.replies}/>
+                        <RepliesPagination replies={thread.replies} authUser={authUser}/>
                     </div>
                     <div className="col-md-4">
                         <div className="card sticky-top">

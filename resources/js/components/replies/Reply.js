@@ -5,9 +5,7 @@ import Wysiwyg from "../Wysiwyg";
 import moment from "moment";
 import {queryCache, useMutation} from "react-query";
 
-const Reply = ({reply }) =>{
-
-    const [authUser, setAuthUser] = useState(false);
+const Reply = ({reply, authUser }) =>{
 
     const [editing, setEditing] = useState(false);
 
@@ -37,14 +35,6 @@ const Reply = ({reply }) =>{
     })
 
     useEffect(()=>{
-        Axios.get('/api/auth/user', { headers })
-            .then(response=>{
-                setAuthUser(response.data);
-            })
-            .catch(error=>{
-                setAuthUser(false);
-                console.log(error);
-        });
         Axios.get(`/api/replies/${reply.id}/favorites/favorited`,{ headers })
             .then(response=>{
                 setIsFavorited(!! response.data);

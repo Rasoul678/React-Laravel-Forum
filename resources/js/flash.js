@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import store from "./store";
 
 const Flash = ()=>{
     const [show, setShow] = useState(false);
@@ -44,10 +42,6 @@ const style = {
 }
 
 if (document.getElementById("flash")) {
-    ReactDOM.render(
-        <Provider store={store}>
-            <Flash />
-        </Provider>,
-        document.getElementById("flash")
+    ReactDOM.render(<Flash />, document.getElementById("flash")
     );
 }

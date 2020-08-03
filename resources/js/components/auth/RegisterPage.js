@@ -1,6 +1,5 @@
 import React, { useState} from 'react';
 import Axios from 'axios';
-import {useSelector} from "react-redux";
 
 const RegisterPage = (props)=>{
     const [name, setName] = useState('');
@@ -9,9 +8,9 @@ const RegisterPage = (props)=>{
     const [confirmationPassword, setConfirmationPassword] = useState('');
     const [errors, setErrors] = useState({});
 
-    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
+    const user = localStorage.getItem('user');
 
-    if(isAuthenticated){
+    if(user){
         props.history.push('/');
     }
 

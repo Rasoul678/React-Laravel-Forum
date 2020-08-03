@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import {useSelector} from "react-redux";
 import Wysiwyg from "../Wysiwyg";
 import Axios from "axios";
 import {queryCache, useMutation} from "react-query";
 
-const AddReplyButton = ({thread}) => {
-    const isAuthenticated = useSelector(state=>state.authReducer.isAuthenticated);
+const AddReplyButton = ({thread, authUser}) => {
 
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
@@ -37,8 +35,8 @@ const AddReplyButton = ({thread}) => {
                 type="button"
                 className='btn btn-lg btn-primary rounded-circle position-fixed'
                 style={style.button}
-                title={isAuthenticated ? 'Leave a Reply' : 'Login and Leave a Reply.'}
-                disabled={!isAuthenticated}
+                title={authUser ? 'Leave a Reply' : 'Login and Leave a Reply.'}
+                disabled={!! authUser}
                 data-toggle="modal"
                 data-target="#addReplyModal"
             ><span className='h2'>+</span>

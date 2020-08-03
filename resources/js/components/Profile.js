@@ -33,9 +33,9 @@ const Profile = () => {
                             <span className='h3'>
                                 {
                                     data?.user &&
-                                    <Fragment>
+                                    <>
                                         {data.user.name} Joined {moment(data?.user.created_at).fromNow()}
-                                    </Fragment>
+                                    </>
                                 }
                             </span>
                         </div>
