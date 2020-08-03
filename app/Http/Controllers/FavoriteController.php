@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Reply;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
@@ -24,6 +25,6 @@ class FavoriteController extends Controller
 
     public function check(Reply $reply)
     {
-        return $reply->isFavorited();
+        return $reply->isFavored(Auth::id());
     }
 }

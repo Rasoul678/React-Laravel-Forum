@@ -47,6 +47,12 @@ Route::get('/replies/{reply}/favorites', 'FavoriteController@store');
 
 Route::delete('/replies/{reply}/favorites', 'FavoriteController@destroy');
 
-Route::get('/replies/{reply}/favorites/favorited', 'FavoriteController@check');
+Route::get('/replies/{reply}/favorites/favored', 'FavoriteController@check');
 
 Route::get('/profiles/{user:name}', 'ProfileController@show');
+
+Route::post('/threads/{thread}/subscriptions', 'SubscriptionController@store');
+
+Route::delete('/threads/{thread}/subscriptions', 'SubscriptionController@destroy');
+
+Route::get('/threads/{thread}/subscriptions/subscribed', 'SubscriptionController@check');

@@ -12,6 +12,7 @@ const ShowThread = (props) => {
     const {channel, id} = useParams();
 
     const [editing, setEditing] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [body, setBody] = useState('');
 
     const inputTitle = useRef('');
@@ -21,13 +22,15 @@ const ShowThread = (props) => {
 
     const {isLoading, data: thread} = useQuery('thread', () =>
         Axios.get(`/api/threads/${channel}/${id}`)
-            .then(response => response.data)
+            .then(response => {
+                Axios.get(`/api/threads/${response.data.id}/subscriptions/subscribed`,{ headers })
+                    .then(response=>{
+                        setIsSubscribed(!! response.data);
+                    });
+                return response.data
+            })
     )
 
-    const {data: authUser} = useQuery('authUser', ()=>{
-        Axios.get('/api/auth/user', { headers })
-            .then(response=> response.data);
-    })
 
     const updateThread = (data) =>{
         Axios({
@@ -60,11 +63,25 @@ const ShowThread = (props) => {
             });
     };
 
+    const toggleSubscription = () =>{
+        Axios({
+            method: isSubscribed ? 'delete' : 'post',
+            url: `/api/threads/${id}/subscriptions`,
+            headers
+        })
+            .then(response=>{
+                setIsSubscribed(!isSubscribed);
+                flash(response.data, "success");
+                return response;
+            })
+    }
+
+
     return (
         <div>
             {!isLoading ? (
                 <div className="row mt-5">
-                    <AddReplyButton thread={thread} authUser={authUser}/>
+                    <AddReplyButton thread={thread}/>
                     <div className="col-md-8">
                         <div className="card shadow sticky-top mb-5">
                             <div className="card-body">
@@ -144,7 +161,7 @@ const ShowThread = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <RepliesPagination replies={thread.replies} authUser={authUser}/>
+                        <RepliesPagination replies={thread.replies} />
                     </div>
                     <div className="col-md-4">
                         <div className="card sticky-top">
@@ -157,6 +174,9 @@ const ShowThread = (props) => {
                                     </Link>
                                     , and currently has {Pluralize('comment', thread.replies_count, true)}.
                                 </h5>
+                            </div>
+                            <div className="card-body">
+                                <button className={`btn btn-${isSubscribed ? 'danger' : 'primary'}`} onClick={()=>toggleSubscription()}>{isSubscribed ? 'Unsubscribe' : 'Subscribe'}</button>
                             </div>
                         </div>
                     </div>

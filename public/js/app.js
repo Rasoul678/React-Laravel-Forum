@@ -109947,12 +109947,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var AddReplyButton = function AddReplyButton(_ref) {
-  var thread = _ref.thread,
-      authUser = _ref.authUser;
+  var thread = _ref.thread;
   var token = localStorage.getItem('access_token');
   var headers = {
     Authorization: "Bearer ".concat(token)
   };
+  var authUser = JSON.parse(localStorage.getItem('user'));
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState2 = _slicedToArray(_useState, 2),
@@ -109984,7 +109984,7 @@ var AddReplyButton = function AddReplyButton(_ref) {
     className: "btn btn-lg btn-primary rounded-circle position-fixed",
     style: style.button,
     title: authUser ? 'Leave a Reply' : 'Login and Leave a Reply.',
-    disabled: !!authUser,
+    disabled: !!authUser ? false : true,
     "data-toggle": "modal",
     "data-target": "#addReplyModal"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -110178,7 +110178,6 @@ var RepliesPagination = /*#__PURE__*/function (_Component) {
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, currentReplies === null || currentReplies === void 0 ? void 0 : currentReplies.map(function (reply) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Reply__WEBPACK_IMPORTED_MODULE_2__["default"], {
-          authUser: _this2.props.authUser,
           reply: reply,
           key: reply.id
         });
@@ -110268,8 +110267,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Reply = function Reply(_ref) {
-  var reply = _ref.reply,
-      authUser = _ref.authUser;
+  var reply = _ref.reply;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -110283,8 +110281,8 @@ var Reply = function Reply(_ref) {
 
   var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      isFavorited = _useState6[0],
-      setIsFavorited = _useState6[1];
+      isFavored = _useState6[0],
+      setIsFavored = _useState6[1];
 
   var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState8 = _slicedToArray(_useState7, 2),
@@ -110300,6 +110298,7 @@ var Reply = function Reply(_ref) {
   var headers = {
     Authorization: "Bearer ".concat(token)
   };
+  var authUser = JSON.parse(localStorage.getItem('user'));
 
   var deleteReply = function deleteReply(reply) {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {
@@ -110319,10 +110318,10 @@ var Reply = function Reply(_ref) {
       destroy = _useMutation2[0];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/replies/".concat(reply.id, "/favorites/favorited"), {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/replies/".concat(reply.id, "/favorites/favored"), {
       headers: headers
     }).then(function (response) {
-      setIsFavorited(!!response.data);
+      setIsFavored(!!response.data);
     })["catch"](function (error) {
       console.log(error);
     });
@@ -110349,12 +110348,12 @@ var Reply = function Reply(_ref) {
   var toggleFavorite = function toggleFavorite(e) {
     e.preventDefault();
     axios__WEBPACK_IMPORTED_MODULE_2___default()({
-      method: isFavorited ? 'delete' : 'get',
+      method: isFavored ? 'delete' : 'get',
       url: "/api/replies/".concat(reply.id, "/favorites"),
       headers: headers
     }).then(function (response) {
       setFavoritesCount(response.data.favoritesCount);
-      setIsFavorited(!isFavorited);
+      setIsFavored(!isFavored);
     })["catch"](function (error) {
       console.log(error);
     });
@@ -110396,7 +110395,7 @@ var Reply = function Reply(_ref) {
       return toggleFavorite(e);
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "fa fa-heart ".concat(isFavorited ? 'text-danger' : 'text-secondary'),
+    className: "fa fa-heart ".concat(isFavored ? 'text-danger' : 'text-secondary'),
     "aria-hidden": "true"
   }, " ", favoritesCount)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), update ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     dangerouslySetInnerHTML: {
@@ -110651,10 +110650,15 @@ var ShowThread = function ShowThread(props) {
       editing = _useState2[0],
       setEditing = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      body = _useState4[0],
-      setBody = _useState4[1];
+      isSubscribed = _useState4[0],
+      setIsSubscribed = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      body = _useState6[0],
+      setBody = _useState6[1];
 
   var inputTitle = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('');
   var token = localStorage.getItem('access_token');
@@ -110664,20 +110668,16 @@ var ShowThread = function ShowThread(props) {
 
   var _useQuery = Object(react_query__WEBPACK_IMPORTED_MODULE_8__["useQuery"])('thread', function () {
     return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(channel, "/").concat(id)).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/api/threads/".concat(response.data.id, "/subscriptions/subscribed"), {
+        headers: headers
+      }).then(function (response) {
+        setIsSubscribed(!!response.data);
+      });
       return response.data;
     });
   }),
       isLoading = _useQuery.isLoading,
       thread = _useQuery.data;
-
-  var _useQuery2 = Object(react_query__WEBPACK_IMPORTED_MODULE_8__["useQuery"])('authUser', function () {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/auth/user', {
-      headers: headers
-    }).then(function (response) {
-      return response.data;
-    });
-  }),
-      authUser = _useQuery2.data;
 
   var updateThread = function updateThread(data) {
     axios__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -110711,11 +110711,22 @@ var ShowThread = function ShowThread(props) {
     });
   };
 
+  var toggleSubscription = function toggleSubscription() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: isSubscribed ? 'delete' : 'post',
+      url: "/api/threads/".concat(id, "/subscriptions"),
+      headers: headers
+    }).then(function (response) {
+      setIsSubscribed(!isSubscribed);
+      flash(response.data, "success");
+      return response;
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, !isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    thread: thread,
-    authUser: authUser
+    thread: thread
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-8"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -110792,8 +110803,7 @@ var ShowThread = function ShowThread(props) {
       __html: thread.body
     }
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_RepliesPagination__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    replies: thread.replies,
-    authUser: authUser
+    replies: thread.replies
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -110805,7 +110815,14 @@ var ShowThread = function ShowThread(props) {
   }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link",
     to: "/profiles/".concat(thread.creator.name)
-  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.replies_count, true), "."))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.replies_count, true), ".")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-".concat(isSubscribed ? 'danger' : 'primary'),
+    onClick: function onClick() {
+      return toggleSubscription();
+    }
+  }, isSubscribed ? 'Unsubscribe' : 'Subscribe'))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "text-center mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"

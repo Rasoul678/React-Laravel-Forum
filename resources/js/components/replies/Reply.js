@@ -5,13 +5,12 @@ import Wysiwyg from "../Wysiwyg";
 import moment from "moment";
 import {queryCache, useMutation} from "react-query";
 
-const Reply = ({reply, authUser }) =>{
-
+const Reply = ({ reply }) =>{
     const [editing, setEditing] = useState(false);
 
     const [favoritesCount, setFavoritesCount] = useState(reply.favoritesCount);
 
-    const [isFavorited, setIsFavorited] = useState(false);
+    const [isFavored, setIsFavored] = useState(false);
 
     const [update, setUpdate] = useState('');
 
@@ -19,6 +18,7 @@ const Reply = ({reply, authUser }) =>{
 
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
+    const authUser = JSON.parse(localStorage.getItem('user'));
 
     const deleteReply = (reply) => {
         Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {headers})
@@ -35,9 +35,9 @@ const Reply = ({reply, authUser }) =>{
     })
 
     useEffect(()=>{
-        Axios.get(`/api/replies/${reply.id}/favorites/favorited`,{ headers })
+        Axios.get(`/api/replies/${reply.id}/favorites/favored`,{ headers })
             .then(response=>{
-                setIsFavorited(!! response.data);
+                setIsFavored(!! response.data);
             }).catch(error=>{
             console.log(error);
         });
@@ -64,13 +64,13 @@ const Reply = ({reply, authUser }) =>{
     const toggleFavorite = (e) =>{
         e.preventDefault();
         Axios({
-            method: isFavorited ? 'delete' : 'get',
+            method: isFavored ? 'delete' : 'get',
             url: `/api/replies/${reply.id}/favorites`,
             headers
         })
             .then(response=>{
                 setFavoritesCount(response.data.favoritesCount);
-                setIsFavorited(!isFavorited);
+                setIsFavored(!isFavored);
             })
             .catch(error=>{
                 console.log(error);
@@ -104,7 +104,7 @@ const Reply = ({reply, authUser }) =>{
                                         authUser &&
                                         <div>
                                             <Link to='#' className='h4' onClick={(e)=>toggleFavorite(e)}>
-                                                <i className={`fa fa-heart ${isFavorited ? 'text-danger' : 'text-secondary'}`} aria-hidden="true"> {favoritesCount}</i>
+                                                <i className={`fa fa-heart ${isFavored ? 'text-danger' : 'text-secondary'}`} aria-hidden="true"> {favoritesCount}</i>
                                             </Link>
                                         </div>
                                     }

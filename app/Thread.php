@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Thread extends Model
 {
@@ -57,5 +58,27 @@ class Thread extends Model
     public function addReply($reply)
     {
         return $this->replies()->create($reply);;
+    }
+
+    public function subscribe($userId)
+    {
+        $this->subscriptions()->create([
+            'user_id'=>$userId
+        ]);
+    }
+
+    public function unsubscribe($userId)
+    {
+        $this->subscriptions()->where('user_id', $userId)->delete();
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function isSubscribed($userId)
+    {
+        return $this->subscriptions()->where('user_id', $userId)->exists();
     }
 }

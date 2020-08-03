@@ -13,9 +13,9 @@ trait Favorable
         return $this->morphMany(Favorite::class, 'favorited');
     }
 
-    public function isFavorited()
+    public function isFavored($userId)
     {
-        return $this->favorites()->where('user_id', Auth::id())->exists();
+        return $this->favorites()->where('user_id', $userId)->exists();
     }
 
     public function disLike()

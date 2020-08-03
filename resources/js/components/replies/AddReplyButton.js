@@ -3,10 +3,11 @@ import Wysiwyg from "../Wysiwyg";
 import Axios from "axios";
 import {queryCache, useMutation} from "react-query";
 
-const AddReplyButton = ({thread, authUser}) => {
+const AddReplyButton = ({thread}) => {
 
     const token = localStorage.getItem('access_token');
     const headers = {Authorization: `Bearer ${token}`};
+    const authUser = JSON.parse(localStorage.getItem('user'));
 
     const [body, setBody] = useState('');
 
@@ -36,7 +37,7 @@ const AddReplyButton = ({thread, authUser}) => {
                 className='btn btn-lg btn-primary rounded-circle position-fixed'
                 style={style.button}
                 title={authUser ? 'Leave a Reply' : 'Login and Leave a Reply.'}
-                disabled={!! authUser}
+                disabled={!! authUser ? false : true}
                 data-toggle="modal"
                 data-target="#addReplyModal"
             ><span className='h2'>+</span>
