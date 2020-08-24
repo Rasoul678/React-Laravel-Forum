@@ -4,13 +4,14 @@ import {Link, useParams} from "react-router-dom";
 import moment from "moment";
 import Axios from 'axios';
 import {useQuery} from "react-query";
+import {URL} from "../helpers";
 
 const Profile = () => {
 
     const {username} = useParams();
 
     const {isLoading, data} = useQuery('user', () =>
-        Axios.get(`/api/profiles/${username}`)
+        Axios.get(URL + `api/profiles/${username}`)
             .then(response => response.data)
     )
 

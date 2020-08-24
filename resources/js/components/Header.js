@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import LoggedInLinks from "./auth/LoggedInLinks";
 import LoggedOutLinks from "./auth/LoggedOutLinks";
+import {URL} from "../helpers";
 
 function Header(props) {
     const [authUser, setAuthUser] = useState(false);
@@ -19,11 +20,11 @@ function Header(props) {
     );
 
     const markAsRead = (notificationId) =>{
-        Axios.delete(`/api/profiles/${authUser.id}/notifications/${notificationId}`, {headers});
+        Axios.delete(URL + `api/profiles/${authUser.id}/notifications/${notificationId}`, {headers});
     }
 
     useEffect(()=>{
-        Axios.get('/api/auth/user', { headers })
+        Axios.get(URL + 'api/auth/user', { headers })
             .then(response=>{
                 setAuthUser(response.data);
                 localStorage.setItem('user', JSON.stringify(response.data));
@@ -32,7 +33,7 @@ function Header(props) {
                 localStorage.removeItem('user');
                 console.log(error);
         });
-        Axios.get('/api/channels')
+        Axios.get(URL + 'api/channels')
             .then(response=>{
                 setChannels(response.data);
             }).catch(error=>{

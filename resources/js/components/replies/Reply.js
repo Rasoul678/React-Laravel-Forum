@@ -4,6 +4,7 @@ import Axios from 'axios';
 import Wysiwyg from "../Wysiwyg";
 import moment from "moment";
 import {queryCache, useMutation} from "react-query";
+import {URL} from "../../helpers";
 
 const Reply = ({ reply }) =>{
     const [editing, setEditing] = useState(false);
@@ -21,7 +22,7 @@ const Reply = ({ reply }) =>{
     const authUser = JSON.parse(localStorage.getItem('user'));
 
     const deleteReply = (reply) => {
-        Axios.delete('/api/threads/' + reply.thread_id + '/replies/' + reply.id, {headers})
+        Axios.delete(URL + 'api/threads/' + reply.thread_id + '/replies/' + reply.id, {headers})
             .then(response => {
                 flash("Your reply has been deleted.", "danger");
                 return response;
@@ -35,7 +36,7 @@ const Reply = ({ reply }) =>{
     })
 
     useEffect(()=>{
-        Axios.get(`/api/replies/${reply.id}/favorites/favored`,{ headers })
+        Axios.get(URL + `api/replies/${reply.id}/favorites/favored`,{ headers })
             .then(response=>{
                 setIsFavored(!! response.data);
             }).catch(error=>{
@@ -47,7 +48,7 @@ const Reply = ({ reply }) =>{
         const data = {body};
         Axios({
             method: 'patch',
-            url: `/api/threads/${reply.thread_id}/replies/${reply.id}`,
+            url: URL + `api/threads/${reply.thread_id}/replies/${reply.id}`,
             data,
             headers
         })
@@ -65,7 +66,7 @@ const Reply = ({ reply }) =>{
         e.preventDefault();
         Axios({
             method: isFavored ? 'delete' : 'get',
-            url: `/api/replies/${reply.id}/favorites`,
+            url: URL + `api/replies/${reply.id}/favorites`,
             headers
         })
             .then(response=>{

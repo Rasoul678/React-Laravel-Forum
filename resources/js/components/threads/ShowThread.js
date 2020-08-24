@@ -7,6 +7,7 @@ import AddReplyButton from "../replies/AddReplyButton";
 import RepliesPagination from "../replies/RepliesPagination";
 import Wysiwyg from "../Wysiwyg";
 import {queryCache, useMutation, useQuery} from "react-query";
+import {URL} from "../../helpers";
 
 const ShowThread = (props) => {
     const {channel, id} = useParams();
@@ -22,9 +23,9 @@ const ShowThread = (props) => {
     const headers = {Authorization: `Bearer ${token}`};
 
     const {isLoading, data: thread} = useQuery('thread', () =>
-        Axios.get(`/api/threads/${channel}/${id}`)
+        Axios.get(URL + `api/threads/${channel}/${id}`)
             .then(response => {
-                Axios.get(`/api/threads/${response.data.id}/subscriptions/subscribed`,{ headers })
+                Axios.get(URL + `api/threads/${response.data.id}/subscriptions/subscribed`,{ headers })
                     .then(response=>{
                         setIsSubscribed(!! response.data);
                     });
@@ -36,7 +37,7 @@ const ShowThread = (props) => {
     const updateThread = (data) =>{
         Axios({
             method: 'patch',
-            url: `/api/threads/${channel}/${id}`,
+            url: URL + `api/threads/${channel}/${id}`,
             data,
             headers
         })
@@ -54,7 +55,7 @@ const ShowThread = (props) => {
     })
 
     const deleteThread = (id) => {
-        Axios.delete("/api/threads/" + id, {headers})
+        Axios.delete(URL + "api/threads/" + id, {headers})
             .then(response => {
                 props.history.push('/threads');
                 flash(response.data, "danger");
@@ -67,7 +68,7 @@ const ShowThread = (props) => {
     const toggleSubscription = () =>{
         Axios({
             method: isSubscribed ? 'delete' : 'post',
-            url: `/api/threads/${id}/subscriptions`,
+            url: URL + `api/threads/${id}/subscriptions`,
             headers
         })
             .then(response=>{
@@ -80,7 +81,7 @@ const ShowThread = (props) => {
     useEffect(() => {
         Axios({
             method: 'post',
-            url: `/api/threads/${id}/visits`,
+            url: URL + `api/threads/${id}/visits`,
             headers
         })
             .then(response=>{

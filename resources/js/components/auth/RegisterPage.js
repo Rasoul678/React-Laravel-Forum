@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import Axios from 'axios';
+import {URL} from '../../helpers';
 
 const RegisterPage = (props)=>{
     const [name, setName] = useState('');
@@ -90,7 +91,7 @@ const RegisterPage = (props)=>{
                                 password,
                                 password_confirmation: confirmationPassword
                             }
-                            Axios.post('/api/auth/register', formData)
+                            Axios.post(URL + 'api/auth/register', formData)
                                 .then(response=>{
                                     console.log(response);
                                     props.history.push('/');

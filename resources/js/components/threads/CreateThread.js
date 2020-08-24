@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Axios from 'axios';
 import Wysiwyg from "../Wysiwyg";
 import {useQuery} from "react-query";
+import {URL} from "../../helpers";
 
 function CreateThread(props) {
 
@@ -20,14 +21,14 @@ function CreateThread(props) {
     const formData = { title, body, user_id: user?.id, channel_id:  channel};
 
     const {data: channels} = useQuery('channels', () =>
-        Axios.get('/api/channels')
+        Axios.get(URL + 'api/channels')
             .then(response=>response.data)
     )
 
     const createThread = ()=>{
         const token = localStorage.getItem('access_token');
         const headers = {Authorization: `Bearer ${token}`};
-        Axios.post("/api/threads", formData, {headers})
+        Axios.post(URL + 'api/threads', formData, {headers})
             .then(response => {
                 props.history.push(response.data.path);
                 flash("Your thread has been created.", "success")

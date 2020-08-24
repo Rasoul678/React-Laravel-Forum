@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
+import {URL} from "../../helpers"
 
 function LoginPage(props) {
     const [email, setEmail] = useState('');
@@ -55,7 +56,7 @@ function LoginPage(props) {
                             </div>
                         </form>
                         <button className='btn btn-primary' onClick={(e)=>{
-                            Axios.post('/api/auth/login', {email, password})
+                            Axios.post(URL + 'api/auth/login', {email, password})
                                 .then(response=>{
                                     console.log(response);
                                     localStorage.setItem("user", JSON.stringify(response.data.user));

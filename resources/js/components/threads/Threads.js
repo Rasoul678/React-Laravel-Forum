@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import Axios from "axios";
 import {useHistory} from "react-router";
 import ThreadsPagination from "./ThreadsPagination";
+import {URL} from "../../helpers";
 
 const Threads = () => {
 
@@ -12,7 +13,7 @@ const Threads = () => {
     const history = useHistory();
 
     useEffect(()=>{
-        Axios.get(`/api${history.location.pathname}${history.location.search}`)
+        Axios.get(URL + `api${history.location.pathname}${history.location.search}`)
             .then(response => {
                 setIsLoading(false);
                 setThreads(response.data);

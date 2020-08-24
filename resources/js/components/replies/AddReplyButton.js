@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Wysiwyg from "../Wysiwyg";
 import Axios from "axios";
 import {queryCache, useMutation} from "react-query";
+import {URL} from "../../helpers";
 
 const AddReplyButton = ({thread}) => {
 
@@ -14,7 +15,7 @@ const AddReplyButton = ({thread}) => {
     const addReply = (data) => {
         Axios({
             method: 'post',
-            url: `/api/threads/${thread.id}/replies`,
+            url: URL + `api/threads/${thread.id}/replies`,
             data,
             headers
         })

@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import { withRouter } from "react-router";
+import {URL} from "../../helpers";
 
 
 const LoggedInLinks = () => {
@@ -11,7 +12,7 @@ const LoggedInLinks = () => {
     const logout = ()=>{
         const token = localStorage.getItem('access_token');
         const headers = {Authorization: `Bearer ${token}`};
-        Axios.get('/api/auth/logout', {headers})
+        Axios.get(URL + 'api/auth/logout', {headers})
             .then(response=>{
                 console.log(response);
                 flash("See you!", "success");
