@@ -5,6 +5,7 @@ namespace App;
 use App\Notifications\ThreadHasReply;
 use App\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Thread extends Model
 {
@@ -14,7 +15,7 @@ class Thread extends Model
 
     protected $with = ['creator', 'channel'];
 
-    protected $appends = ['path'];
+    protected $appends = ['path', 'hasUpdatesFor'];
 
     protected static function boot()
     {
@@ -87,8 +88,18 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
+    public function visitors()
+    {
+        return $this->hasMany(ThreadVisit::class);
+    }
+
     public function isSubscribed($userId)
     {
         return $this->subscriptions()->where('user_id', $userId)->exists();
+    }
+
+    public function getHasUpdatesForAttribute()
+    {
+      return true;
     }
 }

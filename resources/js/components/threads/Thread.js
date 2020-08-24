@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Pluralize from "pluralize";
 
 const Thread = ({ thread}) => {
-
     return (
         <div className="card shadow mb-3">
             <div className="card-header">
@@ -13,7 +12,11 @@ const Thread = ({ thread}) => {
                             {thread.creator.name}
                         </Link>
                         <Link className='card-link text-dark h5' to={thread.path} >
-                            Posted: {thread.title}
+                            {thread.hasUpdatesFor ? (
+                                <strong><i className="fa fa-star text-danger"></i> Posted: {thread.title}</strong>
+                            ) : (
+                                <span>Posted: {thread.title}</span>
+                            )}
                         </Link>
                     </div>
                     <span className='card-link text-dark h5'>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Axios from "axios";
-import Thread from "./Thread";
 import {useHistory} from "react-router";
+import ThreadsPagination from "./ThreadsPagination";
 
 const Threads = () => {
 
@@ -32,11 +32,7 @@ const Threads = () => {
                         </div>
                     ) : (
                         threads.length ? (
-                            threads?.map(thread => {
-                                return (
-                                    <Thread thread={thread} key={thread.id} />
-                                );
-                            })
+                            <ThreadsPagination threads={threads}/>
                         ) : (
                             <h1>There is no thread yet!</h1>
                         )

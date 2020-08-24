@@ -60,3 +60,5 @@ Route::post('/threads/{thread}/subscriptions', 'SubscriptionController@store');
 Route::delete('/threads/{thread}/subscriptions', 'SubscriptionController@destroy');
 
 Route::get('/threads/{thread}/subscriptions/subscribed', 'SubscriptionController@check');
+
+Route::post('/threads/{thread}/visits', 'VisitController@visit');

@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
@@ -18,6 +18,7 @@ const ShowThread = (props) => {
     const inputTitle = useRef('');
 
     const token = localStorage.getItem('access_token');
+    const user = JSON.parse(localStorage.getItem('user'));
     const headers = {Authorization: `Bearer ${token}`};
 
     const {isLoading, data: thread} = useQuery('thread', () =>
@@ -76,6 +77,17 @@ const ShowThread = (props) => {
             })
     }
 
+    useEffect(() => {
+        Axios({
+            method: 'post',
+            url: `/api/threads/${id}/visits`,
+            headers
+        })
+            .then(response=>{
+                console.log(response.data);
+            })
+    }, [])
+
 
     return (
         <div>
@@ -113,7 +125,7 @@ const ShowThread = (props) => {
                                         }
                                     </div>
                                     {
-                                        thread.user_id === JSON.parse(localStorage.getItem('user'))?.id && !editing &&
+                                        thread.user_id === user?.id && !editing &&
                                         <Link
                                             to="#"
                                             title="Edit Thread"
@@ -175,9 +187,12 @@ const ShowThread = (props) => {
                                     , and currently has {Pluralize('comment', thread.replies_count, true)}.
                                 </h5>
                             </div>
-                            <div className="card-body">
-                                <button className={`btn btn-${isSubscribed ? 'danger' : 'primary'}`} onClick={()=>toggleSubscription()}>{isSubscribed ? 'Unsubscribe' : 'Subscribe'}</button>
-                            </div>
+                            {
+                                user &&
+                                <div className="card-body">
+                                    <button className={`btn btn-${isSubscribed ? 'danger' : 'primary'}`} onClick={()=>toggleSubscription()}>{isSubscribed ? 'Unsubscribe' : 'Subscribe'}</button>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

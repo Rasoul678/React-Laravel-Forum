@@ -110673,8 +110673,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var ShowThread = function ShowThread(props) {
-  var _JSON$parse;
-
   var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
       channel = _useParams.channel,
       id = _useParams.id;
@@ -110696,6 +110694,7 @@ var ShowThread = function ShowThread(props) {
 
   var inputTitle = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('');
   var token = localStorage.getItem('access_token');
+  var user = JSON.parse(localStorage.getItem('user'));
   var headers = {
     Authorization: "Bearer ".concat(token)
   };
@@ -110757,6 +110756,15 @@ var ShowThread = function ShowThread(props) {
     });
   };
 
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    axios__WEBPACK_IMPORTED_MODULE_2___default()({
+      method: 'post',
+      url: "/api/threads/".concat(id, "/visits"),
+      headers: headers
+    }).then(function (response) {
+      console.log(response.data);
+    });
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, !isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_replies_AddReplyButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -110784,7 +110792,7 @@ var ShowThread = function ShowThread(props) {
   }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/profiles/".concat(thread.creator.name),
     className: "card-link h4"
-  }, thread.creator.name), " ", "posted: ", ' ', thread.title)), thread.user_id === ((_JSON$parse = JSON.parse(localStorage.getItem('user'))) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.id) && !editing && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, thread.creator.name), " ", "posted: ", ' ', thread.title)), thread.user_id === (user === null || user === void 0 ? void 0 : user.id) && !editing && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "#",
     title: "Edit Thread",
     className: "h2",
@@ -110849,7 +110857,7 @@ var ShowThread = function ShowThread(props) {
   }, "This thread was published ", moment__WEBPACK_IMPORTED_MODULE_3___default()(thread.created_at).fromNow(), " by", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link",
     to: "/profiles/".concat(thread.creator.name)
-  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.replies_count, true), ".")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, " " + thread.creator.name), ", and currently has ", pluralize__WEBPACK_IMPORTED_MODULE_4___default()('comment', thread.replies_count, true), ".")), user && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btn btn-".concat(isSubscribed ? 'danger' : 'primary'),
@@ -110901,7 +110909,9 @@ var Thread = function Thread(_ref) {
   }, thread.creator.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     className: "card-link text-dark h5",
     to: thread.path
-  }, "Posted: ", thread.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+  }, thread.hasUpdatesFor ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-star text-danger"
+  }), " Posted: ", thread.title) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Posted: ", thread.title))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "card-link text-dark h5"
   }, pluralize__WEBPACK_IMPORTED_MODULE_2___default()('reply', thread.replies_count, true)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
@@ -110930,8 +110940,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Thread__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Thread */ "./resources/js/components/threads/Thread.js");
-/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var _ThreadsPagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ThreadsPagination */ "./resources/js/components/threads/ThreadsPagination.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -110960,7 +110970,7 @@ var Threads = function Threads() {
       threads = _useState4[0],
       setThreads = _useState4[1];
 
-  var history = Object(react_router__WEBPACK_IMPORTED_MODULE_3__["useHistory"])();
+  var history = Object(react_router__WEBPACK_IMPORTED_MODULE_2__["useHistory"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api".concat(history.location.pathname).concat(history.location.search)).then(function (response) {
       setIsLoading(false);
@@ -110979,11 +110989,8 @@ var Threads = function Threads() {
     className: "fa fa-cog fa-spin fa-5x fa-fw text-primary"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "sr-only"
-  }, "Loading...")) : threads.length ? threads === null || threads === void 0 ? void 0 : threads.map(function (thread) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      thread: thread,
-      key: thread.id
-    });
+  }, "Loading...")) : threads.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ThreadsPagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    threads: threads
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "There is no thread yet!")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -110996,6 +111003,186 @@ var Threads = function Threads() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Threads);
+
+/***/ }),
+
+/***/ "./resources/js/components/threads/ThreadsPagination.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/threads/ThreadsPagination.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var _Thread__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Thread */ "./resources/js/components/threads/Thread.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var prev = 0;
+var next = 0;
+var last = 0;
+var first = 0;
+
+var ThreadsPagination = /*#__PURE__*/function (_Component) {
+  _inherits(ThreadsPagination, _Component);
+
+  var _super = _createSuper(ThreadsPagination);
+
+  function ThreadsPagination(props) {
+    var _this;
+
+    _classCallCheck(this, ThreadsPagination);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      threads: props.threads,
+      currentPage: 1,
+      threadsPerPage: 10
+    };
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    _this.handleLastClick = _this.handleLastClick.bind(_assertThisInitialized(_this));
+    _this.handleFirstClick = _this.handleFirstClick.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(ThreadsPagination, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (this.props.threads !== prevProps.threads) {
+        this.setState(_objectSpread(_objectSpread({}, this.state), {}, {
+          threads: this.props.threads
+        }));
+      }
+    }
+  }, {
+    key: "handleClick",
+    value: function handleClick(event) {
+      event.preventDefault();
+      this.setState({
+        currentPage: Number(event.target.id)
+      });
+    }
+  }, {
+    key: "handleLastClick",
+    value: function handleLastClick(event) {
+      event.preventDefault();
+      this.setState({
+        currentPage: last
+      });
+    }
+  }, {
+    key: "handleFirstClick",
+    value: function handleFirstClick(event) {
+      event.preventDefault();
+      this.setState({
+        currentPage: 1
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _this$state = this.state,
+          threads = _this$state.threads,
+          currentPage = _this$state.currentPage,
+          threadsPerPage = _this$state.threadsPerPage; // Logic for displaying current replies
+
+      var indexOfLastThread = currentPage * threadsPerPage;
+      var indexOfFirstThread = indexOfLastThread - threadsPerPage;
+      var currentThreads = threads === null || threads === void 0 ? void 0 : threads.slice(indexOfFirstThread, indexOfLastThread);
+      prev = currentPage > 0 ? currentPage - 1 : 0;
+      last = Math.ceil((threads === null || threads === void 0 ? void 0 : threads.length) / threadsPerPage);
+      next = last === currentPage ? currentPage : currentPage + 1; // Logic for displaying page numbers
+
+      var pageNumbers = [];
+
+      for (var i = 1; i <= last; i++) {
+        pageNumbers.push(i);
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, currentThreads === null || currentThreads === void 0 ? void 0 : currentThreads.map(function (thread) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Thread__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          thread: thread,
+          key: thread.id
+        });
+      })), threads.length > threadsPerPage && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        id: "page-numbers"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Pagination"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], null, prev === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        disabled: true
+      }, "First") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        onClick: this.handleFirstClick,
+        id: prev,
+        href: prev
+      }, "First")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], null, prev === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        disabled: true
+      }, "Prev") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        onClick: this.handleClick,
+        id: prev,
+        href: prev
+      }, "Prev")), pageNumbers.map(function (number, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Pagination"], {
+          key: i
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], {
+          active: pageNumbers[currentPage - 1] === number ? true : false
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+          onClick: _this2.handleClick,
+          href: number,
+          key: number,
+          id: number
+        }, number)));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], null, currentPage === last ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        disabled: true
+      }, "Next") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        onClick: this.handleClick,
+        id: pageNumbers[currentPage],
+        href: pageNumbers[currentPage]
+      }, "Next")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationItem"], null, currentPage === last ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        disabled: true
+      }, "Last") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_1__["PaginationLink"], {
+        onClick: this.handleLastClick,
+        id: pageNumbers[currentPage],
+        href: pageNumbers[currentPage]
+      }, "Last"))))));
+    }
+  }]);
+
+  return ThreadsPagination;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (ThreadsPagination);
 
 /***/ }),
 

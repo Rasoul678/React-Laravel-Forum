@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->unreadNotifications;
     }
+
+    public function visits()
+    {
+        return $this->hasMany(ThreadVisit::class);
+    }
 }
